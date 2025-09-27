@@ -1,4 +1,5 @@
 import contextlib
+import importlib.resources
 import logging
 import os
 import sqlite3
@@ -31,13 +32,16 @@ SQLITE_PRAGMAS = [
     "PRAGMA foreign_keys = ON;",
     "PRAGMA synchronous = NORMAL;",
 ]
-MIGRATION_FOLDER = Path("./migrations")
 
-DATABASE_PATH = os.getenv("DATABASE_PATH", default="./db.sqlite3")
 
-templates = Jinja2Templates(directory="./templates")
-queries_basic = aiosql.from_path("./queries/basic.sql", "aiosqlite")
-# queries_auth = aiosql.from_path("./queries/auth.sql", "aiosqlite")
+DATABASE_PATH = Path(os.getenv("DATABASE_PATH", default="./db.sqlite3"))
+MIGRATION_DIR = importlib.resources.files("simple_web_app").joinpath("migrations")
+TEMPLATE_DIR = importlib.resources.files("simple_web_app").joinpath("templates")
+QUERY_DIR = importlib.resources.files("simple_web_app").joinpath("queries")
+STATIC_DIR = importlib.resources.files("simple_web_app").joinpath("static")
+
+templates = Jinja2Templates(directory=TEMPLATE_DIR)
+queries_basic = aiosql.from_path(QUERY_DIR / "basic.sql", "aiosqlite")
 
 
 def is_htmx_request(request: Request) -> bool:
@@ -80,7 +84,7 @@ async def show_home_page(request: Request):
 async def lifespan(app: Starlette):
     conn = sqlite3.connect(DATABASE_PATH)
     create_migrations_table_if_not_exists(conn)
-    migration_files = sorted(MIGRATION_FOLDER.glob("*.sql"))
+    migration_files = sorted(MIGRATION_DIR.glob("*.sql"))
     migration_queries = [p.read_text() for p in migration_files]
     apply_migrations(conn, migration_queries)
 
@@ -93,6 +97,6 @@ async def lifespan(app: Starlette):
 
 routes = [
     Route("/", methods=["GET"], endpoint=show_home_page),
-    Mount("/static", StaticFiles(directory="static"), name="static"),
+    Mount("/static", StaticFiles(directory=STATIC_DIR), name="static"),
 ]
 app = Starlette(debug=False, routes=routes, lifespan=lifespan)

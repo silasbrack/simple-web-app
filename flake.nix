@@ -78,6 +78,18 @@
               pyproject-build-systems.overlays.default
               overlay
               pyprojectOverrides
+              # (final: prev: {
+              #   simple-web-app = prev.simple-web-app.overrideAttrs (old: {
+              #     src = lib.fileset.toSource {
+              #       root = old.src;
+              #       fileset = lib.fileset.unions [
+              #         (old.src + "/pyproject.toml")
+              #         (old.src + "/src")
+              #         (old.src + "/queries")
+              #       ];
+              #     };
+              #   });
+              # })
             ]
           );
       inherit (pkgs.callPackages pyproject-nix.build.util { }) mkApplication;
@@ -88,12 +100,15 @@
       # Enable no optional dependencies for production build.
       packages.x86_64-linux.default = pythonSet.mkVirtualEnv "simple-web-app-env" workspace.deps.default;
 
+      # default = mkApplication {
+      #   venv = pythonSet.mkVirtualEnv "simple-web-app-env" workspace.deps.default;
+      #   package = pythonSet.hello-world;
+      # };
+
       # Make hello runnable with `nix run`
-      apps.x86_64-linux = {
-        default = {
-          type = "app";
-          program = "${self.packages.x86_64-linux.default}/bin/simple-web-app";
-        };
+      apps.x86_64-linux.default = {
+        type = "app";
+        program = "${self.packages.x86_64-linux.default}/bin/simple-web-app";
       };
 
       # This example provides two different modes of development:
@@ -215,9 +230,5 @@
             '';
           };
       };
-      # default = mkApplication {
-      #   venv = pythonSet.mkVirtualEnv "application-env" workspace.deps.default;
-      #   package = pythonSet.simple-web-app;
-      # };
     };
 }
