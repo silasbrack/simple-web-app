@@ -1,0 +1,44 @@
+[project]
+name = "simple-web-app"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+authors = [
+    { name = "Silas Brack", email = "silasbrack@gmail.com" }
+]
+requires-python = "==3.13.*"
+dependencies = [
+    "uvicorn",
+    "starlette",
+    "jinja2",
+    "python-multipart",
+    "aiosql",           # Loading SQL queries as Python functions
+    "aiosqlite",        # Async sqlite driver
+    "argon2-cffi",      # Password hashing
+    "orjson",           # Serializing logs as JSON
+]
+
+[dependency-groups]
+prod = [
+    "gunicorn",
+    "uvicorn-worker",
+]
+dev = [
+    { include-group = "test" },
+    "uvicorn",
+]
+test = [
+    "pytest",
+    "httpx",  # Starlette TestClient support
+    "locust", # Stress testing
+]
+
+[project.scripts]
+simple-web-app = "simple_web_app.runner:run"
+
+[build-system]
+requires = ["setuptools", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools.packages.find]
+where = ["src"]
