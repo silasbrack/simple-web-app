@@ -19,3 +19,6 @@ db.sqlite3*
 # Nix
 result
 
+# Mac OS
+.DS_Store
+
