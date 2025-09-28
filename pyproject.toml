@@ -19,13 +19,9 @@ dependencies = [
 ]
 
 [dependency-groups]
-prod = [
-    "gunicorn",
-    "uvicorn-worker",
-]
 dev = [
     { include-group = "test" },
-    "uvicorn",
+    "ruff",
 ]
 test = [
     "pytest",
@@ -34,7 +30,7 @@ test = [
 ]
 
 [project.scripts]
-simple-web-app = "simple_web_app.runner:run"
+simple-web-app = "simple_web_app.runner:run_uvicorn"
 
 [build-system]
 requires = ["setuptools", "wheel"]

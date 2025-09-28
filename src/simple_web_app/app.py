@@ -8,15 +8,13 @@ from pathlib import Path
 import aiosql
 import aiosqlite
 from starlette.applications import Starlette
+from starlette.config import Config
 from starlette.requests import Request
 from starlette.routing import Mount, Route
 from starlette.staticfiles import StaticFiles
 from starlette.templating import Jinja2Templates
 
-from simple_web_app.migration import (
-    apply_migrations,
-    create_migrations_table_if_not_exists,
-)
+from simple_web_app.migration import apply_migrations, create_migrations_table_if_not_exists
 
 logging.basicConfig()
 logger = logging.getLogger(__name__)
@@ -33,8 +31,11 @@ SQLITE_PRAGMAS = [
     "PRAGMA synchronous = NORMAL;",
 ]
 
+CONFIG = Config(".env")
+DEBUG = CONFIG("DEBUG", cast=bool, default=True)
+DATABASE_PATH = CONFIG("DATABASE_PATH", default="./db.sqlite")
 
-DATABASE_PATH = Path(os.getenv("DATABASE_PATH", default="./db.sqlite3"))
+DATABASE_PATH = Path(DATABASE_PATH)
 MIGRATION_DIR = importlib.resources.files("simple_web_app").joinpath("migrations")
 TEMPLATE_DIR = importlib.resources.files("simple_web_app").joinpath("templates")
 QUERY_DIR = importlib.resources.files("simple_web_app").joinpath("queries")
@@ -100,3 +101,4 @@ routes = [
     Mount("/static", StaticFiles(directory=STATIC_DIR), name="static"),
 ]
 app = Starlette(debug=False, routes=routes, lifespan=lifespan)
+

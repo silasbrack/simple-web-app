@@ -1,5 +1,4 @@
-import uvicorn
+def run_uvicorn():
+    import uvicorn
 
-
-def run():
-    uvicorn.run("simple_web_app.main:app")
+    uvicorn.run("simple_web_app.app:app")
