@@ -32,7 +32,7 @@ test = [
 ]
 
 [project.scripts]
-simple-web-app = "simple_web_app.runner:run_uvicorn"
+simple-web-app = "simple_web_app.__main__:run_uvicorn"
 create-migration = "simple_web_app.migration:run_create_migration"
 
 [build-system]
