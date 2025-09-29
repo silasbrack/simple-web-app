@@ -1,3 +1,4 @@
+import os
 from starlette.testclient import TestClient
 
 
@@ -13,3 +14,4 @@ def test_home_htmx(client: TestClient):
     response = client.get("/", headers={"HX-Request": "asdf"})
     assert response.status_code == 200
     assert response.template.name == "index.html"
+

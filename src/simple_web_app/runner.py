@@ -1,5 +1,6 @@
-import uvicorn
+import subprocess
 
 
-def run():
-    uvicorn.run("simple_web_app.main:app")
+def run_uvicorn():
+    subprocess.run(["uvicorn", "simple_web_app.app:app"])
+
