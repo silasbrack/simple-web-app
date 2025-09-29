@@ -22,7 +22,7 @@ dependencies = [
 dev = [
     { include-group = "test" },
     "ruff",
-    "watchfiles",
+    "watchfiles", # Watch non-*.py files with uvicorn
 ]
 test = [
     "pytest",
@@ -43,5 +43,5 @@ build-backend = "setuptools.build_meta"
 where = ["src"]
 
 [tool.setuptools.package-data]
-simple_web_app = ["queries/**", "migrations/**", "templates/**", "static/**", "logging.json"]
+simple_web_app = ["queries/**", "migrations/**", "templates/**", "static/**"]
 

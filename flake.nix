@@ -43,14 +43,12 @@
         sourcePreference = "wheel";
       };
 
-
-
       # Construct package set
       pythonSets = forAllSystems (
         system:
-	let
+        let
           pkgs = nixpkgs.legacyPackages.${system};
-	  inherit (pkgs) stdenv;
+          inherit (pkgs) stdenv;
           baseSet = pkgs.callPackage pyproject-nix.build.packages {
             python = pkgs.python313;
           };
@@ -122,21 +120,20 @@
                     };
 
                   };
-		};
-	      });
+              };
+            });
           };
-	in
+        in
         # Use base package set from pyproject.nix builders
-        baseSet.overrideScope
-          (
-            lib.composeManyExtensions [
-              pyproject-build-systems.overlays.default
-              overlay
-              pyprojectOverrides
-              includeLoggingConfigOverride
-            ]
-          )
-	);
+        baseSet.overrideScope (
+          lib.composeManyExtensions [
+            pyproject-build-systems.overlays.default
+            overlay
+            pyprojectOverrides
+            includeLoggingConfigOverride
+          ]
+        )
+      );
 
       # inherit (pkgs.callPackages pyproject-nix.build.util { }) mkApplication;
     in
@@ -144,7 +141,9 @@
       # Package a virtual environment as our main application.
       #
       # Enable no optional dependencies for production build.
-      packages = forAllSystems (system: { default = pythonSets.${system}.mkVirtualEnv "simple-web-app-env" workspace.deps.default; });
+      packages = forAllSystems (system: {
+        default = pythonSets.${system}.mkVirtualEnv "simple-web-app-env" workspace.deps.default;
+      });
 
       # default = mkApplication {
       #   venv = pythonSet.mkVirtualEnv "simple-web-app-env" workspace.deps.default;
@@ -157,12 +156,13 @@
         let
           appRoot = self.packages.${system}.default;
           appProgram = "${appRoot}/bin/simple-web-app";
-        in {
+        in
+        {
           default = {
             type = "app";
             program = appProgram;
           };
-	}
+        }
       );
 
       # Run the checks by running `nix flake check`
@@ -181,10 +181,11 @@
       # - Pure development using uv2nix to manage virtual environments
       devShells = forAllSystems (
         system:
-	let
+        let
           pkgs = nixpkgs.legacyPackages.${system};
           python = pkgs.python313;
-	in {
+        in
+        {
           # It is of course perfectly OK to keep using an impure virtualenv workflow and only use uv2nix to build packages.
           # This devShell simply adds Python and undoes the dependency leakage done by Nixpkgs Python infrastructure.
           impure = pkgs.mkShell {
@@ -245,20 +246,7 @@
                           (old.src + "/src/simple_web_app/__init__.py")
                         ];
                       };
-
-                      # # Hatchling (our build system) has a dependency on the `editables` package when building editables.
-                      # #
-                      # # In normal Python flows this dependency is dynamically handled, and doesn't need to be explicitly declared.
-                      # # This behaviour is documented in PEP-660.
-                      # #
-                      # # With Nix the dependency needs to be explicitly declared.
-                      # nativeBuildInputs =
-                      #   old.nativeBuildInputs
-                      #   ++ final.resolveBuildSystem {
-                      #     editables = [ ];
-                      #   };
                     });
-
                   })
                 ]
               );
@@ -297,6 +285,7 @@
                 export REPO_ROOT=$(git rev-parse --show-toplevel)
               '';
             };
-      });
+        }
+      );
     };
 }
