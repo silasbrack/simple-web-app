@@ -14,11 +14,14 @@ wheels/
 .pytest_cache/
 
 # Sqlite
-db.sqlite3*
+*.sqlite3*
 
 # Nix
 result
 
 # Mac OS
 .DS_Store
+
+# Environment
+.env
 

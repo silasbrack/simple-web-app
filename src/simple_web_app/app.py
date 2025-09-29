@@ -9,6 +9,8 @@ import aiosql
 import aiosqlite
 from starlette.applications import Starlette
 from starlette.config import Config
+from starlette.middleware import Middleware
+# from starlette.middleware.sessions import SessionMiddleware
 from starlette.requests import Request
 from starlette.routing import Mount, Route
 from starlette.staticfiles import StaticFiles
@@ -16,9 +18,7 @@ from starlette.templating import Jinja2Templates
 
 from simple_web_app.migration import apply_migrations, create_migrations_table_if_not_exists
 
-logging.basicConfig()
 logger = logging.getLogger(__name__)
-logger.setLevel(logging.INFO)
 
 SQLITE_PRAGMAS = [
     "PRAGMA journal_mode = WAL;",
@@ -31,9 +31,10 @@ SQLITE_PRAGMAS = [
     "PRAGMA synchronous = NORMAL;",
 ]
 
-CONFIG = Config(".env")
-DEBUG = CONFIG("DEBUG", cast=bool, default=True)
-DATABASE_PATH = CONFIG("DATABASE_PATH", default="./db.sqlite")
+config = Config()
+DEBUG = config("DEBUG", cast=bool, default=True)
+DATABASE_PATH = config("DATABASE_PATH", default="./db.sqlite3")
+# SECRET_KEY = config("SECRET_KEY", default="asdf")
 
 DATABASE_PATH = Path(DATABASE_PATH)
 MIGRATION_DIR = importlib.resources.files("simple_web_app").joinpath("migrations")
@@ -81,6 +82,12 @@ async def show_home_page(request: Request):
     return render(request, "index.html")
 
 
+async def join_chat(request: Request):
+    async with request.form() as form:
+        username = form["username"]
+    return render(request, "chat.html")
+
+
 @contextlib.asynccontextmanager
 async def lifespan(app: Starlette):
     conn = sqlite3.connect(DATABASE_PATH)
@@ -98,7 +105,15 @@ async def lifespan(app: Starlette):
 
 routes = [
     Route("/", methods=["GET"], endpoint=show_home_page),
+    Route("/chat/join", methods=["POST"], endpoint=join_chat),
     Mount("/static", StaticFiles(directory=STATIC_DIR), name="static"),
 ]
-app = Starlette(debug=False, routes=routes, lifespan=lifespan)
-
+middleware = [
+    # Middleware(SessionMiddleware, secret_key=SECRET_KEY),
+]
+app = Starlette(
+    debug=DEBUG,
+    routes=routes,
+    middleware=middleware,
+    lifespan=lifespan,
+)

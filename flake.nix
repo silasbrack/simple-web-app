@@ -41,43 +41,103 @@
       # Create package overlay from workspace.
       overlay = workspace.mkPyprojectOverlay {
         sourcePreference = "wheel";
-        # Optionally customise PEP 508 environment
-        # environ = {
-        #   platform_release = "5.10.65";
-        # };
       };
 
-      # # Extend generated overlay with build fixups
-      # #
-      # # Uv2nix can only work with what it has, and uv.lock is missing essential metadata to perform some builds.
-      # # This is an additional overlay implementing build fixups.
-      # # See:
-      # # - https://pyproject-nix.github.io/uv2nix/FAQ.html
-      # pyprojectOverrides = _final: _prev: {
-      #   # Implement build fixups here.
-      #   # Note that uv2nix is _not_ using Nixpkgs buildPythonPackage.
-      #   # It's using https://pyproject-nix.github.io/pyproject.nix/build.html
-      # };
+
 
       # Construct package set
       pythonSets = forAllSystems (
         system:
 	let
           pkgs = nixpkgs.legacyPackages.${system};
-          python = pkgs.python3;
+	  inherit (pkgs) stdenv;
+          baseSet = pkgs.callPackage pyproject-nix.build.packages {
+            python = pkgs.python313;
+          };
+
+          includeLoggingConfigOverride = _final: prev: {
+            simple-web-app = prev.simple-web-app.overrideAttrs (old: {
+              postInstall = ''
+                mkdir -p $out/share
+                cp ${./logging.json} $out/share/logging.json
+              '';
+            });
+          };
+
+          # Extend generated overlay with build fixups
+          #
+          # Uv2nix can only work with what it has, and uv.lock is missing essential metadata to perform some builds.
+          # This is an additional overlay implementing build fixups.
+          # See:
+          # - https://pyproject-nix.github.io/uv2nix/FAQ.html
+          pyprojectOverrides = final: prev: {
+            # Implement build fixups here.
+            # Note that uv2nix is _not_ using Nixpkgs buildPythonPackage.
+            # It's using https://pyproject-nix.github.io/pyproject.nix/build.html
+            simple-web-app = prev.simple-web-app.overrideAttrs (old: {
+              passthru = old.passthru // {
+                # Put all tests in the passthru.tests attribute set.
+                # Nixpkgs also uses the passthru.tests mechanism for ofborg test discovery.
+                #
+                # For usage with Flakes we will refer to the passthru.tests attributes to construct the flake checks attribute set.
+                tests =
+                  let
+                    # Construct a virtual environment with only the test dependency-group enabled.
+                    virtualenv = final.mkVirtualEnv "simple-web-app-pytest-env" {
+                      simple-web-app = [ "test" ];
+                    };
+
+                  in
+                  (old.tests or { })
+                  // {
+                    pytest = stdenv.mkDerivation {
+                      name = "${final.simple-web-app.name}-pytest";
+                      inherit (final.simple-web-app) src;
+                      nativeBuildInputs = [
+                        virtualenv
+                      ];
+                      dontConfigure = true;
+
+                      # Because this package is running tests, and not actually building the main package
+                      # the build phase is running the tests.
+                      #
+                      # In this particular example we also output a HTML coverage report, which is used as the build output.
+                      buildPhase = ''
+                        runHook preBuild
+                        pytest --cov tests --cov-report html
+                        runHook postBuild
+                      '';
+
+                      # Install the HTML coverage report into the build output.
+                      #
+                      # If you wanted to install multiple test output formats such as TAP outputs
+                      # you could make this derivation a multiple-output derivation.
+                      #
+                      # See https://nixos.org/manual/nixpkgs/stable/#chap-multiple-output for more information on multiple outputs.
+                      installPhase = ''
+                        runHook preInstall
+                        mv htmlcov $out
+                        runHook postInstall
+                      '';
+                    };
+
+                  };
+		};
+	      });
+          };
 	in
         # Use base package set from pyproject.nix builders
-        (pkgs.callPackage pyproject-nix.build.packages {
-          inherit python;
-        }).overrideScope
+        baseSet.overrideScope
           (
             lib.composeManyExtensions [
               pyproject-build-systems.overlays.default
               overlay
-              # pyprojectOverrides
+              pyprojectOverrides
+              includeLoggingConfigOverride
             ]
           )
 	);
+
       # inherit (pkgs.callPackages pyproject-nix.build.util { }) mkApplication;
     in
     {
@@ -91,7 +151,7 @@
       #   package = pythonSet.hello-world;
       # };
 
-      # Make hello runnable with `nix run`
+      # Make simple-web-app runnable with `nix run`
       apps = forAllSystems (
         system:
         let
@@ -105,6 +165,17 @@
 	}
       );
 
+      # Run the checks by running `nix flake check`
+      checks = forAllSystems (
+        system:
+        let
+          pythonSet = pythonSets.${system};
+        in
+        {
+          inherit (pythonSet.simple-web-app.passthru.tests) pytest;
+        }
+      );
+
       # This example provides two different modes of development:
       # - Impurely using uv to manage virtual environments
       # - Pure development using uv2nix to manage virtual environments
@@ -112,7 +183,7 @@
         system:
 	let
           pkgs = nixpkgs.legacyPackages.${system};
-          python = pkgs.python3;
+          python = pkgs.python313;
 	in {
           # It is of course perfectly OK to keep using an impure virtualenv workflow and only use uv2nix to build packages.
           # This devShell simply adds Python and undoes the dependency leakage done by Nixpkgs Python infrastructure.
@@ -121,21 +192,18 @@
               python
               pkgs.uv
               pkgs.ruff
+              pkgs.ty
               pkgs.basedpyright
             ];
             env = {
               # Prevent uv from managing Python downloads
               UV_PYTHON_DOWNLOADS = "never";
+
               # Force uv to use nixpkgs Python interpreter
               UV_PYTHON = python.interpreter;
+
               LD_LIBRARY_PATH = "${pkgs.stdenv.cc.cc.lib}/lib/:/run/opengl-driver/lib/";
-              # LD_LIBRARY_PATH = lib.makeLibraryPath pkgs.pythonManylinuxPackages.manylinux1;
             };
-            # // lib.optionalAttrs pkgs.stdenv.isLinux {
-            #   # Python libraries often load native shared objects using dlopen(3).
-            #   # Setting LD_LIBRARY_PATH makes the dynamic library loader aware of libraries without using RPATH for lookup.
-            #   LD_LIBRARY_PATH = lib.makeLibraryPath pkgs.pythonManylinuxPackages.manylinux1;
-            #};
             shellHook = ''
               unset PYTHONPATH
             '';
@@ -178,17 +246,17 @@
                         ];
                       };
 
-                      # Hatchling (our build system) has a dependency on the `editables` package when building editables.
-                      #
-                      # In normal Python flows this dependency is dynamically handled, and doesn't need to be explicitly declared.
-                      # This behaviour is documented in PEP-660.
-                      #
-                      # With Nix the dependency needs to be explicitly declared.
-                      nativeBuildInputs =
-                        old.nativeBuildInputs
-                        ++ final.resolveBuildSystem {
-                          editables = [ ];
-                        };
+                      # # Hatchling (our build system) has a dependency on the `editables` package when building editables.
+                      # #
+                      # # In normal Python flows this dependency is dynamically handled, and doesn't need to be explicitly declared.
+                      # # This behaviour is documented in PEP-660.
+                      # #
+                      # # With Nix the dependency needs to be explicitly declared.
+                      # nativeBuildInputs =
+                      #   old.nativeBuildInputs
+                      #   ++ final.resolveBuildSystem {
+                      #     editables = [ ];
+                      #   };
                     });
 
                   })
@@ -206,6 +274,7 @@
                 virtualenv
                 pkgs.uv
                 pkgs.ruff
+                pkgs.ty
                 pkgs.basedpyright
               ];
 
@@ -218,8 +287,6 @@
 
                 # Prevent uv from downloading managed Python's
                 UV_PYTHON_DOWNLOADS = "never";
-
-                # LD_LIBRARY_PATH = lib.makeLibraryPath pkgs.pythonManylinuxPackages.manylinux1;
               };
 
               shellHook = ''

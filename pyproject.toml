@@ -22,15 +22,18 @@ dependencies = [
 dev = [
     { include-group = "test" },
     "ruff",
+    "watchfiles",
 ]
 test = [
     "pytest",
-    "httpx",  # Starlette TestClient support
-    "locust", # Stress testing
+    "pytest-cov",
+    "httpx",      # Starlette TestClient support
+    "locust",     # Stress testing
 ]
 
 [project.scripts]
 simple-web-app = "simple_web_app.runner:run_uvicorn"
+create-migration = "simple_web_app.migration:run_create_migration"
 
 [build-system]
 requires = ["setuptools", "wheel"]
@@ -40,5 +43,5 @@ build-backend = "setuptools.build_meta"
 where = ["src"]
 
 [tool.setuptools.package-data]
-simple_web_app = ["queries/**", "migrations/**", "templates/**", "static/**"]
+simple_web_app = ["queries/**", "migrations/**", "templates/**", "static/**", "logging.json"]
 

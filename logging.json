@@ -1,0 +1,59 @@
+{
+  "version": 1,
+  "formatters": {
+    "default": {
+      "format": "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
+    },
+    "extra": {
+      "format": "%(asctime)-16s %(name)-8s %(filename)-12s %(lineno)-6s %(funcName)-30s %(levelname)-8s %(message)s",
+      "datefmt": "%m-%d %H:%M:%S"
+    },
+    "json": {
+      "()": "simple_web_app.log.JsonFormatter",
+      "fmt_dict": {
+        "level": "levelname",
+        "message": "message", 
+        "loggerName": "name", 
+        "processName": "processName",
+        "processID": "process", 
+        "threadName": "threadName", 
+        "threadID": "thread",
+        "timestamp": "asctime"
+      }
+    }
+  },
+  "handlers": {
+    "root": {
+      "class": "logging.StreamHandler",
+      "level": "WARN",
+      "formatter": "json",
+      "stream": "ext://sys.stdout"
+    },
+    "simple_web_app": {
+      "class": "logging.StreamHandler",
+      "level": "INFO",
+      "formatter": "json",
+      "stream": "ext://sys.stdout"
+    },
+    "uvicorn": {
+      "class": "logging.StreamHandler",
+      "level": "INFO",
+      "formatter": "json",
+      "stream": "ext://sys.stdout"
+    }
+  },
+  "loggers": {
+    "simple_web_app": {
+      "level": "INFO",
+      "handlers": ["simple_web_app"]
+    },
+    "uvicorn": {
+      "level": "INFO",
+      "handlers": ["uvicorn"]
+    }
+  },
+  "root": {
+    "level": "WARN",
+    "handlers": ["root"]
+  }
+}
