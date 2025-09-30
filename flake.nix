@@ -194,7 +194,6 @@
               pkgs.uv
               pkgs.ruff
               pkgs.ty
-              pkgs.basedpyright
             ];
             env = {
               # Prevent uv from managing Python downloads
@@ -263,7 +262,6 @@
                 pkgs.uv
                 pkgs.ruff
                 pkgs.ty
-                pkgs.basedpyright
               ];
 
               env = {
