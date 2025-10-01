@@ -6,11 +6,13 @@
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <script src="https://cdn.jsdelivr.net/npm/htmx.org@2.0.7/dist/htmx.min.js"></script>
         <!--<script src="https://cdn.jsdelivr.net/npm/htmx-ext-preload@2.1.0"></script>-->
-        <!--<script src="https://unpkg.com/hyperscript.org@0.9.14"></script>-->
+        <script src="https://unpkg.com/hyperscript.org@0.9.14"></script>
         <link rel="stylesheet" href="{{ url_for('static', path='style.css') }}"/>
-        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@2/css/pico.blue.min.css"/>
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@2/css/pico.amber.min.css"/>
     </head>
-    <body class="container" hx-ext="preload" style="--pico-font-family: Inter">
-        <main><div id="content">{% include content %}</div></main>
+    <body hx-ext="preload">
+        <main class="container">
+          <div id="content">{% include content %}</div>
+        </main>
     </body>
 </html>

@@ -2,6 +2,7 @@ import contextlib
 import importlib.resources
 import logging
 import os
+import random
 import sqlite3
 from pathlib import Path
 
@@ -88,6 +89,25 @@ async def join_chat(request: Request):
     return render(request, "chat.html")
 
 
+async def open_search(request: Request):
+    return render(request, "search.html")
+
+
+async def search(request: Request):
+    values = [
+        {"firstname": "Venus", "lastname": "Grimes", "email": "lectus.rutrum@Duisa.edu"},
+        {"firstname": "Fletcher", "lastname": "Owen", "email": "metus@Aenean.org"},
+        {"firstname": "William", "lastname": "Hale", "email": "eu.dolor@risusodio.edu"},
+        {"firstname": "TaShya", "lastname": "Cash", "email": "tincidunt.orci.quis@nuncnullavulputate.co.uk"},
+    ]
+    random.shuffle(values)
+    return render(request, "search_results.html", context={"people": values})
+
+
+async def open_settings(request: Request):
+    return render(request, "settings.html")
+
+
 @contextlib.asynccontextmanager
 async def lifespan(app: Starlette):
     conn = sqlite3.connect(DATABASE_PATH)
@@ -105,6 +125,9 @@ async def lifespan(app: Starlette):
 
 routes = [
     Route("/", methods=["GET"], endpoint=show_home_page),
+    Route("/search", methods=["GET"], endpoint=open_search),
+    Route("/search", methods=["POST"], endpoint=search),
+    Route("/settings", methods=["GET"], endpoint=open_settings),
     Route("/chat/join", methods=["POST"], endpoint=join_chat),
     Mount("/static", StaticFiles(directory=STATIC_DIR), name="static"),
 ]
