@@ -1,0 +1,139 @@
+<section>
+{% if tab == "general" %}
+<h4>Appearance</h4>
+
+<label>
+Theme
+<details class="dropdown">
+  <summary>System</summary>
+  <ul>
+    <li><a>System</a></li>
+    <li><a>Light</a></li>
+    <li><a>Dark</a></li>
+  </ul>
+</details>
+</label>
+
+<label>
+Font Size
+<details class="dropdown">
+  <summary>Normal</summary>
+  <ul>
+    <li><a href="#">Small</a></li>
+    <li><a href="#">Normal</a></li>
+    <li><a href="#">Large</a></li>
+  </ul>
+</details>
+</label>
+
+<h4>Language & Region</h4>
+
+<label>
+Interface Language
+<details class="dropdown">
+  <summary>English</summary>
+  <ul>
+  <li>English</li>
+  <li>Spanish</li>
+  <li>Danish</li>
+  <li>Chinese</li>
+  </ul>
+</details>
+</label>
+
+<label>
+Content Language
+<details class="dropdown">
+  <summary>English</summary>
+  <ul>
+  <li>English</li>
+  <li>Spanish</li>
+  <li>Danish</li>
+  <li>Chinese</li>
+  </ul>
+</details>
+</label>
+
+<h4>Reading Experience</h4>
+
+<label>
+Number of Stories Shown: <output>10</output>
+<input type="range" value="10" min="1" max="30" oninput="this.previousElementSibling.value = this.value"/>
+</label>
+
+<label>
+Story Open Mode
+<details class="dropdown">
+  <summary>Multiple stories</summary>
+  <ul>
+  <li>Multiple stories</li>
+  <li>One story at a time</li>
+  </ul>
+</details>
+</label>
+
+<label>
+Story Expand Mode
+<details class="dropdown">
+  <summary>Double-click to expand all</summary>
+  <ul>
+  <li>Always expand all</li>
+  <li>Double-click to expand all</li>
+  <li>Never expand all</li>
+  </ul>
+</details>
+</label>
+
+<h4>Navigation</h4>
+
+<label>
+ Use Latest URLs
+<details class="dropdown">
+  <summary>Disabled</summary>
+  <ul>
+  <li>Disabled</li>
+  <li>Enabled</li>
+  </ul>
+</details>
+</label>
+
+<h4>About</h4>
+
+<label>
+ Maps Provider
+<details class="dropdown">
+  <summary>Auto</summary>
+  <ul>
+  <li>Auto</li>
+  <li>Kagi Maps</li>
+  <li>Google Maps</li>
+  <li>OpenStreetMap</li>
+  <li>Apple Maps</li>
+  </ul>
+</details>
+</label>
+{% elif tab == "sections" %}
+<nav>
+<ul><li>
+<hgroup>
+<h4>Article Sections</h4>
+<h6>Drag to reorder sections. Use the switch to enable/disable.</small>
+</hgroup>
+</li></ul>
+<ul><li><button>Toggle All</button></li></ul>
+</nav>
+<article><nav><ul><li>Summary</li></ul><ul><li><label><input name="summary" type="checkbox" role="switch" /></label></li></ul></nav></article>
+<article><nav><ul><li>Primary Image</li></ul><ul><li><label><input name="summary" type="checkbox" role="switch" /></label></li></ul></nav></article>
+<article><nav><ul><li>Sources</li></ul><ul><li><label><input name="summary" type="checkbox" role="switch" /></label></li></ul></nav></article>
+<article><nav><ul><li>Highlights</li></ul><ul><li><label><input name="summary" type="checkbox" role="switch" /></label></li></ul></nav></article>
+<article><nav><ul><li>Quotes</li></ul><ul><li><label><input name="summary" type="checkbox" role="switch" /></label></li></ul></nav></article>
+<article><nav><ul><li>Secondary Image</li></ul><ul><li><label><input name="summary" type="checkbox" role="switch" /></label></li></ul></nav></article>
+<article><nav><ul><li>Perspectives</li></ul><ul><li><label><input name="summary" type="checkbox" role="switch" /></label></li></ul></nav></article>
+<article><nav><ul><li>Historical Background</li></ul><ul><li><label><input name="summary" type="checkbox" role="switch" /></label></li></ul></nav></article>
+<article><nav><ul><li>Humanitarian Impact</li></ul><ul><li><label><input name="summary" type="checkbox" role="switch" /></label></li></ul></nav></article>
+<article><nav><ul><li>Technical Details</li></ul><ul><li><label><input name="summary" type="checkbox" role="switch" /></label></li></ul></nav></article>
+<article><nav><ul><li>Business Angle</li></ul><ul><li><label><input name="summary" type="checkbox" role="switch" /></label></li></ul></nav></article>
+<article><nav><ul><li>Scientific Significance</li></ul><ul><li><label><input name="summary" type="checkbox" role="switch" /></label></li></ul></nav></article>
+<article><nav><ul><li>Travel Advisory</li></ul><ul><li><label><input name="summary" type="checkbox" role="switch" /></label></li></ul></nav></article>
+{% endif %}
+</section>

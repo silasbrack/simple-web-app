@@ -23,17 +23,17 @@ def apply_migrations(conn: sqlite3.Connection, migration_queries: list[str]) -> 
     num_migrations = len(migration_queries)
     for i in range(db_version, num_migrations):
         query = migration_queries[i]
-        logger.info(f"Running migration {i}: {query}")
-        conn.execute("BEGIN")
+        print(f"Running migration {i}: {query}")
+        conn.execute("BEGIN TRANSACTION")
         try:
             _ = conn.executescript(query)
-            conn.commit()
+            _ = conn.execute("UPDATE migration_version SET version = ?", [i + 1])
+            conn.execute("COMMIT TRANSACTION")
         except Exception as e:
-            logger.error(f"Encountered the following error while running the migration: {e}")
-            conn.rollback()
+            conn.execute("ROLLBACK")
+            logger.exception(f"Encountered the following error while running the migration: {e}")
             raise
-        _ = conn.execute("UPDATE migration_version SET version = ?", [i + 1])
-        conn.commit()
+
 
 
 def create_migration(name: str, migrations_dir: Path):

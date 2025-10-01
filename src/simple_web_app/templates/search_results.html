@@ -1,4 +1,13 @@
-{% for person in people %}
-<tr><td>{{ person.firstname }}</td><td>{{ person.lastname }}</td><td>{{ person.email }}</td></tr>
+{% for new in news %}
+<tr>
+<td>
+  <details>
+  <summary>
+  {{ new.title }}
+  </summary>
+  <p><small>{{ new.text }}</small></p>
+  </details>
+</td>
+</tr>
 {% endfor %}
 

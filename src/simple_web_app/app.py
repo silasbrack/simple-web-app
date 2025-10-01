@@ -1,9 +1,11 @@
 import contextlib
 import importlib.resources
 import logging
+import time
 import os
 import random
 import sqlite3
+import datetime
 from pathlib import Path
 
 import aiosql
@@ -79,14 +81,41 @@ def render(
     )
 
 
+def format_timedelta(tdelta, fmt):
+    d = {"days": tdelta.days}
+    d["hours"], rem = divmod(tdelta.seconds, 3600)
+    d["minutes"], d["seconds"] = divmod(rem, 60)
+    return fmt.format(**d)
+
+
 async def show_home_page(request: Request):
-    return render(request, "index.html")
+    page = request.query_params.get("page", default=0)
+    page = int(page) if page is not None else page
+    current_time = request.query_params.get("current_time", default=datetime.datetime.now(tz=datetime.UTC))
 
+    limit = 5
+    offset = page * limit
 
-async def join_chat(request: Request):
-    async with request.form() as form:
-        username = form["username"]
-    return render(request, "chat.html")
+    t0 = time.time()
+    rows = await queries_basic.get_categories(request.state.conn, limit=20)
+    all_categories = [row["category"] for row in rows]
+
+    rows = await queries_basic.get_news(request.state.conn, limit=limit, offset=offset, max_published_time=current_time)
+    news = [dict(row) for row in rows]
+    for new in news:
+        rows = await queries_basic.get_categories_for_news(request.state.conn, id=new["id"])
+        categories = [row["category"] for row in rows]
+        new["categories"] = categories
+        published = datetime.datetime.strptime(new["published"], "%Y-%m-%dT%H:%M:%S.%f%z")
+        new["time_since_published"] = format_timedelta(datetime.datetime.now(tz=datetime.UTC) - published, "{days} days, {hours} hours ago")
+    elapsed = time.time() - t0
+    logger.info({"event": "load_page", "page": "/home", "time_s": elapsed})
+
+    context = {"news": news, "categories": all_categories, "page": page, "current_time": current_time}
+    if is_htmx_request(request):
+        context = context | {"oob": True}
+    template_name = "oob_swap.html" if is_htmx_request(request) else "index.html"
+    return render(request, template_name, context=context)
 
 
 async def open_search(request: Request):
@@ -94,23 +123,23 @@ async def open_search(request: Request):
 
 
 async def search(request: Request):
-    values = [
-        {"firstname": "Venus", "lastname": "Grimes", "email": "lectus.rutrum@Duisa.edu"},
-        {"firstname": "Fletcher", "lastname": "Owen", "email": "metus@Aenean.org"},
-        {"firstname": "William", "lastname": "Hale", "email": "eu.dolor@risusodio.edu"},
-        {"firstname": "TaShya", "lastname": "Cash", "email": "tincidunt.orci.quis@nuncnullavulputate.co.uk"},
-    ]
-    random.shuffle(values)
-    return render(request, "search_results.html", context={"people": values})
+    async with request.form() as form:
+        query = form["search"]
+    rows = await queries_basic.search_news(request.state.conn, query=query, limit=10) if query else []
+    return render(request, "search_results.html", context={"news": rows})
 
 
 async def open_settings(request: Request):
-    return render(request, "settings.html")
+    tab = request.query_params.get("tab", default=None)
+    if tab:
+        return render(request, "settings_tab.html", context={"tab": tab})
+    return render(request, "settings.html", context={"tab": "general"})
 
 
 @contextlib.asynccontextmanager
 async def lifespan(app: Starlette):
     conn = sqlite3.connect(DATABASE_PATH)
+    conn.autocommit = True
     create_migrations_table_if_not_exists(conn)
     migration_files = sorted(MIGRATION_DIR.glob("*.sql"))
     migration_queries = [p.read_text() for p in migration_files]
@@ -128,7 +157,6 @@ routes = [
     Route("/search", methods=["GET"], endpoint=open_search),
     Route("/search", methods=["POST"], endpoint=search),
     Route("/settings", methods=["GET"], endpoint=open_settings),
-    Route("/chat/join", methods=["POST"], endpoint=join_chat),
     Mount("/static", StaticFiles(directory=STATIC_DIR), name="static"),
 ]
 middleware = [

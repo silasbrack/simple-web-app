@@ -8,3 +8,8 @@ Configuration, on the other hand, should, whenever possible, be kept outside of 
 Keep the application itself configuration-agnostic whenever possible and choose to instead maintain the `.env.example` file containing a suggested default configuration for developers.
 Configuration should thus always be performed via environment variables.
 
+## Todo
+- ~~Use OOB for loading more articles~~
+- Look into Jinja macros for components
+- ~~Fix tabs~~
+

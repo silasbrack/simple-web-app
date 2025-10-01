@@ -1,0 +1,1 @@
+<button id="load-more-btn" {% if oob %}hx-swap-oob="true"{% endif %} hx-target="#news-cards" hx-swap="beforeend" hx-get="/?page={{ page + 1 }}&current_time={{ current_time }}" class="secondary">Load more</button>

@@ -2,44 +2,22 @@
 <dialog _="on click if target is me then trigger closeModal" open>
   <article>
 
-    <div class="overflow-auto">
-    <table>
-      <tr>
-        <th><strong><a href="#">General</a></strong></th>
-        <th><strong><a href="#">Categories</a></strong></th>
-        <th><strong><a href="#">Sections</a></strong></th>
-        <th><strong><a href="#">Content Filter</a></strong></th>
-        <th><strong><a href="#">Syncing</a></strong></th>
-        <th><strong><a href="#">Experimental</a></strong></th>
-      </tr>
-    </table>
+    <div class="overflow-auto" style="text-wrap: nowrap;">
+      <nav>
+        <ul>
+          <li><div hx-get="/settings?tab=general" hx-target="#settings-tab" hx-swap="innerHTML" style="cursor: pointer;">General</div></li>
+          <li><div hx-get="/settings?tab=categories" hx-target="#settings-tab" hx-swap="innerHTML" style="cursor: pointer;">Categories</div></li>
+          <li><div hx-get="/settings?tab=sections" hx-target="#settings-tab" hx-swap="innerHTML" style="cursor: pointer;">Sections</div></li>
+          <li><div hx-get="/settings?tab=content-filter" hx-target="#settings-tab" hx-swap="innerHTML" style="cursor: pointer;">Content Filter</div></li>
+          <li><div hx-get="/settings?tab=syncing" hx-target="#settings-tab" hx-swap="innerHTML" style="cursor: pointer;">Syncing</div></li>
+          <li><div hx-get="/settings?tab=experimental" hx-target="#settings-tab" hx-swap="innerHTML" style="cursor: pointer;">Experimental</div></li>
+        </ul>
+      </nav>
     </div>
-
-    <p>
-    <h4>Appearance</h4>
-
-    <details class="dropdown">
-      <summary>Theme</summary>
-      <ul>
-        <li><a>System</a></li>
-        <li><a>Light</a></li>
-        <li><a>Dark</a></li>
-      </ul>
-    </details>
-
-    <fieldset>
-    <legend>Font Size</legend>
-    <details class="dropdown">
-      <summary>Dropdown</summary>
-      <ul>
-        <li><a href="#">Normal</a></li>
-        <li><a href="#">Small</a></li>
-        <li><a href="#">Large</a></li>
-      </ul>
-    </details>
-    </fieldset>
-    
-    </p>
+    <hr>
+    <div id="settings-tab">
+    {% include 'settings_tab.html' %}
+    </div>
     <footer>
       <button _="on click trigger closeModal" class="secondary">
         Cancel

@@ -1,9 +1,20 @@
 <article>
-<header><small><a href="">{{ tag }}</a></small></header>
-<details>
-<summary>
-<strong>{{ title }}</strong>
-</summary>
-<p><small>{{ content }}</small></p>
-</details>
+  <header>
+  {% for category in new.categories %}
+  <small><a href="">{{ category  }}</a></small>
+  {% endfor %}
+  </header>
+  <details>
+  <summary>
+  <strong>{{ new.title }}</strong>
+  </summary>
+  <p><small>{{ new.text }}</small></p>
+  </details>
+  <footer>
+    <small>
+    <em>
+    {{ new.time_since_published }}
+    </em>
+    </small>
+  </footer>
 </article>
