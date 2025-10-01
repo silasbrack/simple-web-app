@@ -1,16 +1,20 @@
 <div id="modal" class="modal-is-open modal-is-opening" _="on closeModal remove .modal-is-opening then wait 10 then add .modal-is-closing then wait for animationend then remove me">
 <dialog _="on click if target is me then trigger closeModal" open>
   <article>
-    <nav>
-    <ul>
-	    <li><small>General</small></li>
-	    <li><small>Categories</small></li>
-	    <li><small>Sections</small></li>
-	    <li><small>Content Filter</small></li>
-	    <li><small>Syncing</small></li>
-	    <li><small>Experimental</small></li>
-    </ul>
-    </nav>
+
+    <div class="overflow-auto">
+    <table>
+      <tr>
+        <th><strong><a href="#">General</a></strong></th>
+        <th><strong><a href="#">Categories</a></strong></th>
+        <th><strong><a href="#">Sections</a></strong></th>
+        <th><strong><a href="#">Content Filter</a></strong></th>
+        <th><strong><a href="#">Syncing</a></strong></th>
+        <th><strong><a href="#">Experimental</a></strong></th>
+      </tr>
+    </table>
+    </div>
+
     <p>
     <h4>Appearance</h4>
 
@@ -40,7 +44,7 @@
       <button _="on click trigger closeModal" class="secondary">
         Cancel
       </button>
-      <button>Confirm</button>
+      <button>Save</button>
     </footer>
   </article>
 </dialog>
