@@ -13,6 +13,7 @@ import aiosqlite
 from starlette.applications import Starlette
 from starlette.config import Config
 from starlette.middleware import Middleware
+from starlette.middleware.base import BaseHTTPMiddleware
 # from starlette.middleware.sessions import SessionMiddleware
 from starlette.requests import Request
 from starlette.routing import Mount, Route
@@ -138,6 +139,13 @@ async def open_settings(request: Request):
     return render(request, "settings.html", context={"tab": "general"})
 
 
+class CacheControlMiddleware(BaseHTTPMiddleware):
+    async def dispatch(self, request, call_next):
+        response = await call_next(request)
+        if request.headers.get("HX-Preloaded") == "true":
+            response.headers['cache-control'] = 'private, max-age=60'
+        return response
+
 @contextlib.asynccontextmanager
 async def lifespan(app: Starlette):
     conn = sqlite3.connect(DATABASE_PATH)
@@ -162,6 +170,7 @@ routes = [
     Mount("/static", StaticFiles(directory=STATIC_DIR), name="static"),
 ]
 middleware = [
+    Middleware(CacheControlMiddleware),
     # Middleware(SessionMiddleware, secret_key=SECRET_KEY),
 ]
 app = Starlette(

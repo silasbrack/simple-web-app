@@ -2,7 +2,7 @@
   <header>
   <nav><ul>
   {% for category in new.categories %}
-  <li><div style="cursor: pointer;" hx-get="/?category-id={{ category.id }}" hx-target="#news-cards"><small>{{ category.name  }}</small></div></small></li>
+  <li><div style="cursor: pointer;" hx-get="/?category-id={{ category.id }}" hx-target="#news-cards" preload><small>{{ category.name  }}</small></div></small></li>
   {% endfor %}
   </ul></nav>
   </header>

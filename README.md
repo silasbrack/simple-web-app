@@ -12,4 +12,5 @@ Configuration should thus always be performed via environment variables.
 - ~~Use OOB for loading more articles~~
 - Look into Jinja macros for components
 - ~~Fix tabs~~
+- Fix paths and full page loads 
 
