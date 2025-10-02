@@ -20,11 +20,8 @@ INNER JOIN category AS c
 WHERE nic.news_item_id = :news_item_id;
 
 -- name: get_categories(limit)
-SELECT nic.category_id, c.name AS category
-FROM news_item_category AS nic
-INNER JOIN category AS c
-  ON c.id = nic.category_id
-GROUP BY nic.category_id
-ORDER BY COUNT(*) DESC
+SELECT id, name AS category
+FROM category
+ORDER BY id
 LIMIT :limit;
 
