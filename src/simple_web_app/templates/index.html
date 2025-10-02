@@ -18,7 +18,7 @@
     <table>
       <tr>
       {% for category in categories %}
-      <th><div hx-get="/" hx-target="#news-cards" style="cursor: pointer;">{{ category }}</div></th>
+      <th><div hx-get="/?category-id={{ category.id }}" hx-target="#news-cards" style="cursor: pointer;">{{ category.name }}</div></th>
       {% endfor %}
       </tr>
     </table>

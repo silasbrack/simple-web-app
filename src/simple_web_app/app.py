@@ -89,22 +89,24 @@ def format_timedelta(tdelta, fmt):
 
 
 async def show_home_page(request: Request):
+    t0 = time.time()
     page = request.query_params.get("page", default=0)
     page = int(page) if page is not None else page
     current_time = request.query_params.get("current_time", default=datetime.datetime.now(tz=datetime.UTC))
+    category_id = request.query_params.get("category-id")
 
     limit = 5
     offset = page * limit
 
-    t0 = time.time()
-    rows = await queries_basic.get_categories(request.state.conn, limit=20)
-    all_categories = [row["category"] for row in rows]
+    all_categories = await queries_basic.get_categories(request.state.conn, limit=20)
 
-    rows = await queries_basic.get_news(request.state.conn, limit=limit, offset=offset, max_published_time=current_time)
+    if category_id:
+        rows = await queries_basic.get_news_by_category(request.state.conn, category_id=category_id, limit=limit, offset=offset, max_published_time=current_time)
+    else:
+        rows = await queries_basic.get_news(request.state.conn, limit=limit, offset=offset, max_published_time=current_time)
     news = [dict(row) for row in rows]
     for new in news:
-        rows = await queries_basic.get_categories_for_news(request.state.conn, news_item_id=new["id"])
-        categories = [row["category"] for row in rows]
+        categories = await queries_basic.get_categories_for_news(request.state.conn, news_item_id=new["id"])
         new["categories"] = categories
         published = datetime.datetime.strptime(new["published"], "%Y-%m-%dT%H:%M:%S.%f%z")
         new["time_since_published"] = format_timedelta(datetime.datetime.now(tz=datetime.UTC) - published, "{days} days, {hours} hours ago")
