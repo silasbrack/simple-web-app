@@ -113,7 +113,7 @@ async def show_home_page(request: Request):
     elapsed = time.time() - t0
     logger.info({"event": "load_page", "page": "/home", "time_s": elapsed})
 
-    context = {"news": news, "categories": all_categories, "page": page, "current_time": current_time}
+    context = {"news": news, "categories": all_categories, "page": page, "current_time": current_time, "category_id": category_id}
     if is_htmx_request(request):
         context = context | {"oob": True}
     template_name = "oob_swap.html" if is_htmx_request(request) else "index.html"

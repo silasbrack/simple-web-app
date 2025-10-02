@@ -1,8 +1,10 @@
 <article>
   <header>
+  <nav><ul>
   {% for category in new.categories %}
-  <small><a style="cursor: pointer;" hx-get="/?category-id={{ category.id }}" hx-target="#news-cards">{{ category.name  }}</a></small>
+  <li><div style="cursor: pointer;" hx-get="/?category-id={{ category.id }}" hx-target="#news-cards"><small>{{ category.name  }}</small></div></small></li>
   {% endfor %}
+  </ul></nav>
   </header>
   <details>
   <summary>
