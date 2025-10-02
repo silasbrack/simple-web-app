@@ -12,15 +12,19 @@ SELECT title, text
 FROM news_item_fts(:query)
 LIMIT :limit;
 
--- name: get_categories_for_news(id)
-SELECT category_id
-FROM news_item_category
-WHERE id = :id;
+-- name: get_categories_for_news(news_item_id)
+SELECT nic.category_id, c.name AS category
+FROM news_item_category AS nic
+INNER JOIN category AS c
+  ON c.id = nic.category_id
+WHERE nic.news_item_id = :news_item_id;
 
 -- name: get_categories(limit)
-SELECT category_id
-FROM news_item_category
-GROUP BY category_id
+SELECT nic.category_id, c.name AS category
+FROM news_item_category AS nic
+INNER JOIN category AS c
+  ON c.id = nic.category_id
+GROUP BY nic.category_id
 ORDER BY COUNT(*) DESC
 LIMIT :limit;
 

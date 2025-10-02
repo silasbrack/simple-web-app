@@ -103,7 +103,7 @@ async def show_home_page(request: Request):
     rows = await queries_basic.get_news(request.state.conn, limit=limit, offset=offset, max_published_time=current_time)
     news = [dict(row) for row in rows]
     for new in news:
-        rows = await queries_basic.get_categories_for_news(request.state.conn, id=new["id"])
+        rows = await queries_basic.get_categories_for_news(request.state.conn, news_item_id=new["id"])
         categories = [row["category"] for row in rows]
         new["categories"] = categories
         published = datetime.datetime.strptime(new["published"], "%Y-%m-%dT%H:%M:%S.%f%z")
