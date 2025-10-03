@@ -9,13 +9,15 @@ authors = [
 requires-python = "==3.13.*"
 dependencies = [
     "uvicorn",
+    "uvloop",
+    "httptools",
     "starlette",
     "jinja2",
     "python-multipart",
-    "aiosql",           # Loading SQL queries as Python functions
-    "aiosqlite",        # Async sqlite driver
-    "argon2-cffi",      # Password hashing
-    "orjson",           # Serializing logs as JSON
+    "aiosql", # Loading SQL queries as Python functions
+    "aiosqlite", # Async sqlite driver
+    "argon2-cffi", # Password hashing
+    "orjson", # Serializing logs as JSON
 ]
 
 [dependency-groups]
@@ -27,8 +29,10 @@ dev = [
 test = [
     "pytest",
     "pytest-cov",
-    "httpx",      # Starlette TestClient support
-    "locust",     # Stress testing
+    "pytest-asyncio",
+    "httpx", # Starlette TestClient support
+    "locust", # Stress testing
+    "beautifulsoup4", # HTML parsing
 ]
 
 [project.scripts]
@@ -44,4 +48,7 @@ where = ["src"]
 
 [tool.setuptools.package-data]
 simple_web_app = ["queries/**", "migrations/**", "templates/**", "static/**"]
+
+[tool.pytest.ini_options]
+asyncio_mode = "auto"
 

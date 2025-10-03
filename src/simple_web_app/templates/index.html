@@ -25,10 +25,12 @@
     </div>
 
     <div id="modal-placeholder"></div>
-    <div id="news-cards">
-    {% include 'news_cards.html' %}
+    <div id="news-cards-with-buttons">
+      <div id="news-cards">
+        {% include 'news_cards.html' %}
+      </div>
+      <nav><ul></ul><ul><li>{% include 'load_more.html' %}</li><li> <button>Mark all as read</button></li></ul><ul></ul></nav>
     </div>
-    <nav><ul></ul><ul><li>{% include 'load_more.html' %}</li><li> <button>Mark all as read</button></li></ul><ul></ul></nav>
   <!-- </article> -->
     <footer>
       <nav>

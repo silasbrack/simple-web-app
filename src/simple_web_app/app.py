@@ -95,6 +95,7 @@ async def show_home_page(request: Request):
     page = int(page) if page is not None else page
     current_time = request.query_params.get("current_time", default=datetime.datetime.now(tz=datetime.UTC))
     category_id = request.query_params.get("category-id")
+    category_id = int(category_id) if category_id is not None else None
 
     limit = 5
     offset = page * limit
@@ -148,18 +149,20 @@ class CacheControlMiddleware(BaseHTTPMiddleware):
 
 @contextlib.asynccontextmanager
 async def lifespan(app: Starlette):
-    conn = sqlite3.connect(DATABASE_PATH)
-    conn.autocommit = True
-    create_migrations_table_if_not_exists(conn)
-    migration_files = sorted(MIGRATION_DIR.glob("*.sql"))
-    migration_queries = [p.read_text() for p in migration_files]
-    apply_migrations(conn, migration_queries)
-
+    logger.debug("START LIFESPAN")
     async with aiosqlite.connect(DATABASE_PATH, autocommit=True) as conn:
         conn.row_factory = aiosqlite.Row
+
+        await create_migrations_table_if_not_exists(conn)
+        migration_files = sorted(MIGRATION_DIR.glob("*.sql"))
+        migration_queries = [p.read_text() for p in migration_files]
+        await apply_migrations(conn, migration_queries)
+
         cursors = [conn.execute(query) for query in SQLITE_PRAGMAS]
         [await c for c in cursors]
+        logger.debug("FINISH LIFESPAN")
         yield {"conn": conn}
+        logger.debug("KILL LIFESPAN")
 
 
 routes = [
