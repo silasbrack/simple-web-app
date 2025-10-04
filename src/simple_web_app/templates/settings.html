@@ -1,28 +1,96 @@
-<div id="settings-modal" class="modal-is-open modal-is-opening" _="on closeModal remove .modal-is-opening then wait 10 then add .modal-is-closing then wait for animationend then remove me">
-<dialog _="on click if target is me then trigger closeModal" open>
-  <article>
-    <div class="overflow-auto" style="text-wrap: nowrap;">
-      <nav>
-        <ul>
-	  <li><div id="general-tab" hx-get="{{ url_for('settings_tab').include_query_params(tab='general') }}" hx-target="#settings-tab" hx-swap="innerHTML" preload style="cursor: pointer;">General</div></li>
-          <li><div id="categories-tab" hx-get="{{ url_for('settings_tab').include_query_params(tab='categories') }}" hx-target="#settings-tab" hx-swap="innerHTML" preload style="cursor: pointer;">Categories</div></li>
-          <li><div id="sections-tab" hx-get="{{ url_for('settings_tab').include_query_params(tab='sections') }}" hx-target="#settings-tab" hx-swap="innerHTML" preload style="cursor: pointer;">Sections</div></li>
-          <li><div id="content-filter-tab" hx-get="{{ url_for('settings_tab').include_query_params(tab='content-filter') }}" hx-target="#settings-tab" hx-swap="innerHTML" preload style="cursor: pointer;">Content Filter</div></li>
-          <li><div id="syncing-tab" hx-get="{{ url_for('settings_tab').include_query_params(tab='syncing') }}" hx-target="#settings-tab" hx-swap="innerHTML" preload style="cursor: pointer;">Syncing</div></li>
-          <li><div id="experimental-tab" hx-get="{{ url_for('settings_tab').include_query_params(tab='experimental') }}" hx-target="#settings-tab" hx-swap="innerHTML" preload style="cursor: pointer;">Experimental</div></li>
-        </ul>
-      </nav>
-    </div>
-    <hr>
-    <div id="settings-tab">
-    {% include 'settings_tab.html' %}
-    </div>
-    <footer>
-      <button _="on click trigger closeModal" class="secondary">
-        Cancel
-      </button>
-      <button>Save</button>
-    </footer>
-  </article>
-</dialog>
+<div
+  id="settings-modal"
+  class="modal-is-open modal-is-opening"
+  _="on closeModal remove .modal-is-opening then wait 10 then add .modal-is-closing then wait for animationend then remove me"
+>
+  <dialog _="on click if target is me then trigger closeModal" open>
+    <article>
+      <div class="overflow-auto" style="text-wrap: nowrap">
+        <nav>
+          <ul>
+            <li>
+              <div
+                id="general-tab"
+                hx-get="{{ url_for('settings_tab').include_query_params(tab='general') }}"
+                hx-target="#settings-tab"
+                hx-swap="innerHTML"
+                preload
+                style="cursor: pointer"
+              >
+                General
+              </div>
+            </li>
+            <li>
+              <div
+                id="categories-tab"
+                hx-get="{{ url_for('settings_tab').include_query_params(tab='categories') }}"
+                hx-target="#settings-tab"
+                hx-swap="innerHTML"
+                preload
+                style="cursor: pointer"
+              >
+                Categories
+              </div>
+            </li>
+            <li>
+              <div
+                id="sections-tab"
+                hx-get="{{ url_for('settings_tab').include_query_params(tab='sections') }}"
+                hx-target="#settings-tab"
+                hx-swap="innerHTML"
+                preload
+                style="cursor: pointer"
+              >
+                Sections
+              </div>
+            </li>
+            <li>
+              <div
+                id="content-filter-tab"
+                hx-get="{{ url_for('settings_tab').include_query_params(tab='content-filter') }}"
+                hx-target="#settings-tab"
+                hx-swap="innerHTML"
+                preload
+                style="cursor: pointer"
+              >
+                Content Filter
+              </div>
+            </li>
+            <li>
+              <div
+                id="syncing-tab"
+                hx-get="{{ url_for('settings_tab').include_query_params(tab='syncing') }}"
+                hx-target="#settings-tab"
+                hx-swap="innerHTML"
+                preload
+                style="cursor: pointer"
+              >
+                Syncing
+              </div>
+            </li>
+            <li>
+              <div
+                id="experimental-tab"
+                hx-get="{{ url_for('settings_tab').include_query_params(tab='experimental') }}"
+                hx-target="#settings-tab"
+                hx-swap="innerHTML"
+                preload
+                style="cursor: pointer"
+              >
+                Experimental
+              </div>
+            </li>
+          </ul>
+        </nav>
+      </div>
+      <hr />
+      <div id="settings-tab">{% include 'settings_tab.html' %}</div>
+      <footer>
+        <button _="on click trigger closeModal" class="secondary">
+          Cancel
+        </button>
+        <button>Save</button>
+      </footer>
+    </article>
+  </dialog>
 </div>

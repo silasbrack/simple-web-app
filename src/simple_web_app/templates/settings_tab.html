@@ -1,268 +1,501 @@
 <section>
-{% if tab == "general" %}
-<h4>Appearance</h4>
+  {% if tab == "general" %}
+  <h4>Appearance</h4>
 
-<label>
-Theme
-<details class="dropdown">
-  <summary>System</summary>
-  <ul>
-    <li><a>System</a></li>
-    <li><a>Light</a></li>
-    <li><a>Dark</a></li>
-  </ul>
-</details>
-</label>
-
-<label>
-Font Size
-<details class="dropdown">
-  <summary>Normal</summary>
-  <ul>
-    <li><a href="#">Small</a></li>
-    <li><a href="#">Normal</a></li>
-    <li><a href="#">Large</a></li>
-  </ul>
-</details>
-</label>
-
-<h4>Language & Region</h4>
-
-<label>
-Interface Language
-<details class="dropdown">
-  <summary>English</summary>
-  <ul>
-  <li>English</li>
-  <li>Spanish</li>
-  <li>Danish</li>
-  <li>Chinese</li>
-  </ul>
-</details>
-</label>
-
-<label>
-Content Language
-<details class="dropdown">
-  <summary>English</summary>
-  <ul>
-  <li>English</li>
-  <li>Spanish</li>
-  <li>Danish</li>
-  <li>Chinese</li>
-  </ul>
-</details>
-</label>
-
-<h4>Reading Experience</h4>
-
-<label>
-Number of Stories Shown: <output>10</output>
-<input type="range" value="10" min="1" max="30" oninput="this.previousElementSibling.value = this.value"/>
-</label>
-
-<label>
-Story Open Mode
-<details class="dropdown">
-  <summary>Multiple stories</summary>
-  <ul>
-  <li>Multiple stories</li>
-  <li>One story at a time</li>
-  </ul>
-</details>
-</label>
-
-<label>
-Story Expand Mode
-<details class="dropdown">
-  <summary>Double-click to expand all</summary>
-  <ul>
-  <li>Always expand all</li>
-  <li>Double-click to expand all</li>
-  <li>Never expand all</li>
-  </ul>
-</details>
-</label>
-
-<h4>Navigation</h4>
-
-<label>
- Use Latest URLs
-<details class="dropdown">
-  <summary>Disabled</summary>
-  <ul>
-  <li>Disabled</li>
-  <li>Enabled</li>
-  </ul>
-</details>
-</label>
-
-<h4>About</h4>
-
-<label>
- Maps Provider
-<details class="dropdown">
-  <summary>Auto</summary>
-  <ul>
-  <li>Auto</li>
-  <li>Kagi Maps</li>
-  <li>Google Maps</li>
-  <li>OpenStreetMap</li>
-  <li>Apple Maps</li>
-  </ul>
-</details>
-</label>
-{% elif tab == "sections" %}
-<hgroup>
-<h4>Article Sections</h4>
-<h6>Drag to reorder sections. Use the switch to enable/disable.</small>
-</hgroup>
-<article><nav><ul><li>Summary</li></ul><ul><li><label><input name="summary" type="checkbox" role="switch" /></label></li></ul></nav></article>
-<article><nav><ul><li>Primary Image</li></ul><ul><li><label><input name="summary" type="checkbox" role="switch" /></label></li></ul></nav></article>
-<article><nav><ul><li>Sources</li></ul><ul><li><label><input name="summary" type="checkbox" role="switch" /></label></li></ul></nav></article>
-<article><nav><ul><li>Highlights</li></ul><ul><li><label><input name="summary" type="checkbox" role="switch" /></label></li></ul></nav></article>
-<article><nav><ul><li>Quotes</li></ul><ul><li><label><input name="summary" type="checkbox" role="switch" /></label></li></ul></nav></article>
-<article><nav><ul><li>Secondary Image</li></ul><ul><li><label><input name="summary" type="checkbox" role="switch" /></label></li></ul></nav></article>
-<article><nav><ul><li>Perspectives</li></ul><ul><li><label><input name="summary" type="checkbox" role="switch" /></label></li></ul></nav></article>
-<article><nav><ul><li>Historical Background</li></ul><ul><li><label><input name="summary" type="checkbox" role="switch" /></label></li></ul></nav></article>
-<article><nav><ul><li>Humanitarian Impact</li></ul><ul><li><label><input name="summary" type="checkbox" role="switch" /></label></li></ul></nav></article>
-<article><nav><ul><li>Technical Details</li></ul><ul><li><label><input name="summary" type="checkbox" role="switch" /></label></li></ul></nav></article>
-<article><nav><ul><li>Business Angle</li></ul><ul><li><label><input name="summary" type="checkbox" role="switch" /></label></li></ul></nav></article>
-<article><nav><ul><li>Scientific Significance</li></ul><ul><li><label><input name="summary" type="checkbox" role="switch" /></label></li></ul></nav></article>
-<article><nav><ul><li>Travel Advisory</li></ul><ul><li><label><input name="summary" type="checkbox" role="switch" /></label></li></ul></nav></article>
-<nav><ul></ul><ul><li>
-<button class="secondary">Reset Order</button>
-<button>Toggle All</button>
-</li></ul><ul></ul></nav>
-{% elif tab == "content-filter" %}
-<hgroup>
-<h4>Filter Presets</h4>
-<p>Select one or more preset filters to quickly hide common topics</p>
-</hgroup>
-<select aria-label="Topics" multiple size="6">
-  <option>Cheese</option>
-  <option selected>Fruits</option>
-  <option selected>Nuts</option>
-  <option>Chocolate</option>
-  <option>Crackers</option>
-</select>
-<hgroup>
-<h4>Custom Keywords</h4>
-<p>Add your own keywords to filter, separated by commas</p>
-</hgroup>
-<input type="text" name="custom-keywords" placeholder="e.g., celebrity name, topic" aria-label="Custom Keywords">
-<hgroup>
-<h4>Filter Mode</h4>
-<p>Choose how filtered content is handled</p>
-</hgroup>
-<fieldset>
   <label>
-    <input type="radio" name="language" checked />
-    Hide completely
+    Theme
+    <details class="dropdown">
+      <summary>System</summary>
+      <ul>
+        <li><a>System</a></li>
+        <li><a>Light</a></li>
+        <li><a>Dark</a></li>
+      </ul>
+    </details>
+  </label>
+
+  <label>
+    Font Size
+    <details class="dropdown">
+      <summary>Normal</summary>
+      <ul>
+        <li><a href="#">Small</a></li>
+        <li><a href="#">Normal</a></li>
+        <li><a href="#">Large</a></li>
+      </ul>
+    </details>
+  </label>
+
+  <h4>Language & Region</h4>
+
+  <label>
+    Interface Language
+    <details class="dropdown">
+      <summary>English</summary>
+      <ul>
+        <li>English</li>
+        <li>Spanish</li>
+        <li>Danish</li>
+        <li>Chinese</li>
+      </ul>
+    </details>
+  </label>
+
+  <label>
+    Content Language
+    <details class="dropdown">
+      <summary>English</summary>
+      <ul>
+        <li>English</li>
+        <li>Spanish</li>
+        <li>Danish</li>
+        <li>Chinese</li>
+      </ul>
+    </details>
+  </label>
+
+  <h4>Reading Experience</h4>
+
+  <label>
+    Number of Stories Shown: <output>10</output>
+    <input
+      type="range"
+      value="10"
+      min="1"
+      max="30"
+      oninput="this.previousElementSibling.value = this.value"
+    />
+  </label>
+
+  <label>
+    Story Open Mode
+    <details class="dropdown">
+      <summary>Multiple stories</summary>
+      <ul>
+        <li>Multiple stories</li>
+        <li>One story at a time</li>
+      </ul>
+    </details>
+  </label>
+
+  <label>
+    Story Expand Mode
+    <details class="dropdown">
+      <summary>Double-click to expand all</summary>
+      <ul>
+        <li>Always expand all</li>
+        <li>Double-click to expand all</li>
+        <li>Never expand all</li>
+      </ul>
+    </details>
+  </label>
+
+  <h4>Navigation</h4>
+
+  <label>
+    Use Latest URLs
+    <details class="dropdown">
+      <summary>Disabled</summary>
+      <ul>
+        <li>Disabled</li>
+        <li>Enabled</li>
+      </ul>
+    </details>
+  </label>
+
+  <h4>About</h4>
+
+  <label>
+    Maps Provider
+    <details class="dropdown">
+      <summary>Auto</summary>
+      <ul>
+        <li>Auto</li>
+        <li>Kagi Maps</li>
+        <li>Google Maps</li>
+        <li>OpenStreetMap</li>
+        <li>Apple Maps</li>
+      </ul>
+    </details>
+  </label>
+  {% elif tab == "sections" %}
+  <hgroup>
+    <h4>Article Sections</h4>
+    <h6>Drag to reorder sections. Use the switch to enable/disable.</h6>
+  </hgroup>
+  <article>
+    <nav>
+      <ul>
+        <li>Summary</li>
+      </ul>
+      <ul>
+        <li>
+          <label><input name="summary" type="checkbox" role="switch" /></label>
+        </li>
+      </ul>
+    </nav>
+  </article>
+  <article>
+    <nav>
+      <ul>
+        <li>Primary Image</li>
+      </ul>
+      <ul>
+        <li>
+          <label><input name="summary" type="checkbox" role="switch" /></label>
+        </li>
+      </ul>
+    </nav>
+  </article>
+  <article>
+    <nav>
+      <ul>
+        <li>Sources</li>
+      </ul>
+      <ul>
+        <li>
+          <label><input name="summary" type="checkbox" role="switch" /></label>
+        </li>
+      </ul>
+    </nav>
+  </article>
+  <article>
+    <nav>
+      <ul>
+        <li>Highlights</li>
+      </ul>
+      <ul>
+        <li>
+          <label><input name="summary" type="checkbox" role="switch" /></label>
+        </li>
+      </ul>
+    </nav>
+  </article>
+  <article>
+    <nav>
+      <ul>
+        <li>Quotes</li>
+      </ul>
+      <ul>
+        <li>
+          <label><input name="summary" type="checkbox" role="switch" /></label>
+        </li>
+      </ul>
+    </nav>
+  </article>
+  <article>
+    <nav>
+      <ul>
+        <li>Secondary Image</li>
+      </ul>
+      <ul>
+        <li>
+          <label><input name="summary" type="checkbox" role="switch" /></label>
+        </li>
+      </ul>
+    </nav>
+  </article>
+  <article>
+    <nav>
+      <ul>
+        <li>Perspectives</li>
+      </ul>
+      <ul>
+        <li>
+          <label><input name="summary" type="checkbox" role="switch" /></label>
+        </li>
+      </ul>
+    </nav>
+  </article>
+  <article>
+    <nav>
+      <ul>
+        <li>Historical Background</li>
+      </ul>
+      <ul>
+        <li>
+          <label><input name="summary" type="checkbox" role="switch" /></label>
+        </li>
+      </ul>
+    </nav>
+  </article>
+  <article>
+    <nav>
+      <ul>
+        <li>Humanitarian Impact</li>
+      </ul>
+      <ul>
+        <li>
+          <label><input name="summary" type="checkbox" role="switch" /></label>
+        </li>
+      </ul>
+    </nav>
+  </article>
+  <article>
+    <nav>
+      <ul>
+        <li>Technical Details</li>
+      </ul>
+      <ul>
+        <li>
+          <label><input name="summary" type="checkbox" role="switch" /></label>
+        </li>
+      </ul>
+    </nav>
+  </article>
+  <article>
+    <nav>
+      <ul>
+        <li>Business Angle</li>
+      </ul>
+      <ul>
+        <li>
+          <label><input name="summary" type="checkbox" role="switch" /></label>
+        </li>
+      </ul>
+    </nav>
+  </article>
+  <article>
+    <nav>
+      <ul>
+        <li>Scientific Significance</li>
+      </ul>
+      <ul>
+        <li>
+          <label><input name="summary" type="checkbox" role="switch" /></label>
+        </li>
+      </ul>
+    </nav>
+  </article>
+  <article>
+    <nav>
+      <ul>
+        <li>Travel Advisory</li>
+      </ul>
+      <ul>
+        <li>
+          <label><input name="summary" type="checkbox" role="switch" /></label>
+        </li>
+      </ul>
+    </nav>
+  </article>
+  <nav>
+    <ul></ul>
+    <ul>
+      <li>
+        <button class="secondary">Reset Order</button>
+        <button>Toggle All</button>
+      </li>
+    </ul>
+    <ul></ul>
+  </nav>
+  {% elif tab == "content-filter" %}
+  <hgroup>
+    <h4>Filter Presets</h4>
+    <p>Select one or more preset filters to quickly hide common topics</p>
+  </hgroup>
+  <select aria-label="Topics" multiple size="6">
+    <option>Cheese</option>
+    <option selected>Fruits</option>
+    <option selected>Nuts</option>
+    <option>Chocolate</option>
+    <option>Crackers</option>
+  </select>
+  <hgroup>
+    <h4>Custom Keywords</h4>
+    <p>Add your own keywords to filter, separated by commas</p>
+  </hgroup>
+  <input
+    type="text"
+    name="custom-keywords"
+    placeholder="e.g., celebrity name, topic"
+    aria-label="Custom Keywords"
+  />
+  <hgroup>
+    <h4>Filter Mode</h4>
+    <p>Choose how filtered content is handled</p>
+  </hgroup>
+  <fieldset>
+    <label>
+      <input type="radio" name="language" checked />
+      Hide completely
+    </label>
+    <label>
+      <input type="radio" name="language" />
+      Blur with warning
+    </label>
+  </fieldset>
+  <hgroup>
+    <h4>Filter Scope</h4>
+    <p>Choose which parts of stories to check for keywords</p>
+  </hgroup>
+  <select name="filter-scope" required>
+    <option>Title only</option>
+    <option>Title and summary</option>
+    <option selected>All content</option>
+  </select>
+  <nav>
+    <ul>
+      <li>
+        <hgroup>
+          <h4>Show Filtered Count</h4>
+          <p>Display number of filtered stories in each category</p>
+        </hgroup>
+      </li>
+    </ul>
+    <ul>
+      <li>
+        <input name="terms" type="checkbox" role="switch" />
+      </li>
+    </ul>
+  </nav>
+  <hr />
+  <hgroup>
+    <h4>Backup & Restore</h4>
+    <p>
+      Export your filter settings to a file or import from a previous backup
+    </p>
+  </hgroup>
+  <button class="secondary">Export Settings</button>
+  <button>Import Settings</button>
+  <hr />
+  <button class="outline">Reset Content Filter Settings to Defaults</button>
+  {% elif tab == "syncing" %}
+  <p>
+    Kagi News can sync your settings and read history across all your devices.
+    This data is stored securely on Kagi servers and associated with your Kagi
+    Search account. Your synced data is not used for any other purpose, not
+    shared with anyone, and is solely stored to provide the sync service to you.
+    You have full control over what gets synced and can delete your data at any
+    time.
+  </p>
+  <h4>Sync Preferences</h4>
+  <label>
+    <input
+      name="sync-settings"
+      type="checkbox"
+      role="switch"
+      aria-describedby="sync-settings-description"
+    />
+    Sync Settings
   </label>
   <label>
-    <input type="radio" name="language" />
-    Blur with warning
+    <input
+      name="sync-read-history"
+      type="checkbox"
+      role="switch"
+      aria-describedby="email-helper"
+    />
+    Sync Read History
   </label>
-</fieldset>
-<hgroup>
-<h4>Filter Scope</h4>
-<p>Choose which parts of stories to check for keywords</p>
-</hgroup>
-<select name="filter-scope" required>
-  <option>Title only</option>
-  <option>Title and summary</option>
-  <option selected>All content</option>
-</select>
-<nav>
-<ul><li>
-<hgroup>
-<h4>Show Filtered Count</h4>
-<p>Display number of filtered stories in each category</p>
-</hgroup>
-</li></ul>
-<ul><li>
-<input name="terms" type="checkbox" role="switch" />
-</li></ul>
-</nav>
-<hr>
-<hgroup>
-<h4>Backup & Restore</h4>
-<p>Export your filter settings to a file or import from a previous backup</p>
-</hgroup>
-<button class="secondary">Export Settings</button>
-<button>Import Settings</button>
-<hr>
-<button class="outline">Reset Content Filter Settings to Defaults</button>
-{% elif tab == "syncing" %}
-<p>
-Kagi News can sync your settings and read history across all your devices. This data is stored securely on Kagi servers and associated with your Kagi Search account.  Your synced data is not used for any other purpose, not shared with anyone, and is solely stored to provide the sync service to you. You have full control over what gets synced and can delete your data at any time.
-</p>
-<h4>Sync Preferences</h4>
-<label>
-  <input name="sync-settings" type="checkbox" role="switch" aria-describedby="sync-settings-description"/>
-  Sync Settings
-</label>
-<label>
-  <input name="sync-read-history" type="checkbox" role="switch" aria-describedby="email-helper"/>
-  Sync Read History
-</label>
-<br>
-<h4>Data Management</h4>
-<p>
-You are in control of your data. Export or delete your cloud data at any time. Deletion does not affect local data.
-</p>
-<button class="secondary">Export Data</button>
-<button>Clear All Synced Data</button>
-{% elif tab == "experimental" %}
-<p>⚠️ These are experimental features that may be changed or removed at any time.</p>
-<article>
-<nav>
-<ul><li>
-<hgroup>
-<h4>Show icons next to articles</h4>
-<p>When enabled, small icons will be displayed next to articles to provide visual context.</p>
-</hgroup>
-</li></ul>
-<ul><li>
-  <input name="show-icons-next-to-articles" type="checkbox" role="switch"/>
-</li></ul>
-</article>
-<article>
-<nav>
-<ul><li>
-<hgroup>
-<h4>Show icons in category labels</h4>
-<p>When enabled, small icons will be displayed next to category labels to provide visual context.</p>
-</hgroup>
-</li></ul>
-<ul><li>
-  <input name="show-icons-next-to-category-labels" type="checkbox" role="switch"/>
-</li></ul>
-</article>
-<article>
-<nav>
-<ul><li>
-<hgroup>
-<h4>Disable horizontal category swiping</h4>
-<p>When enabled, horizontal swiping to change categories on mobile devices will be disabled.</p>
-</hgroup>
-</li></ul>
-<ul><li>
-  <input name="disable-horizontal-category-swiping" type="checkbox" role="switch"/>
-</li></ul>
-</article>
-<article>
-<nav>
-<ul><li>
-<hgroup>
-<h4>Show World Tension Index</h4>
-<p>Display a global temperature reading of world stability based on current events.</p>
-</hgroup>
-</li></ul>
-<ul><li>
-  <input name="show-icons-next-to-articles" type="checkbox" role="switch"/>
-</li></ul>
-</article>
-{% endif %}
+  <br />
+  <h4>Data Management</h4>
+  <p>
+    You are in control of your data. Export or delete your cloud data at any
+    time. Deletion does not affect local data.
+  </p>
+  <button class="secondary">Export Data</button>
+  <button>Clear All Synced Data</button>
+  {% elif tab == "experimental" %}
+  <p>
+    ⚠️ These are experimental features that may be changed or removed at any
+    time.
+  </p>
+  <article>
+    <nav>
+      <ul>
+        <li>
+          <hgroup>
+            <h4>Show icons next to articles</h4>
+            <p>
+              When enabled, small icons will be displayed next to articles to
+              provide visual context.
+            </p>
+          </hgroup>
+        </li>
+      </ul>
+      <ul>
+        <li>
+          <input
+            name="show-icons-next-to-articles"
+            type="checkbox"
+            role="switch"
+          />
+        </li>
+      </ul>
+    </nav>
+  </article>
+  <article>
+    <nav>
+      <ul>
+        <li>
+          <hgroup>
+            <h4>Show icons in category labels</h4>
+            <p>
+              When enabled, small icons will be displayed next to category
+              labels to provide visual context.
+            </p>
+          </hgroup>
+        </li>
+      </ul>
+      <ul>
+        <li>
+          <input
+            name="show-icons-next-to-category-labels"
+            type="checkbox"
+            role="switch"
+          />
+        </li>
+      </ul>
+    </nav>
+  </article>
+  <article>
+    <nav>
+      <ul>
+        <li>
+          <hgroup>
+            <h4>Disable horizontal category swiping</h4>
+            <p>
+              When enabled, horizontal swiping to change categories on mobile
+              devices will be disabled.
+            </p>
+          </hgroup>
+        </li>
+      </ul>
+      <ul>
+        <li>
+          <input
+            name="disable-horizontal-category-swiping"
+            type="checkbox"
+            role="switch"
+          />
+        </li>
+      </ul>
+    </nav>
+  </article>
+  <article>
+    <nav>
+      <ul>
+        <li>
+          <hgroup>
+            <h4>Show World Tension Index</h4>
+            <p>
+              Display a global temperature reading of world stability based on
+              current events.
+            </p>
+          </hgroup>
+        </li>
+      </ul>
+      <ul>
+        <li>
+          <input
+            name="show-icons-next-to-articles"
+            type="checkbox"
+            role="switch"
+          />
+        </li>
+      </ul>
+    </nav>
+  </article>
+  {% endif %}
 </section>

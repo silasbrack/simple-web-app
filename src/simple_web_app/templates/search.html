@@ -1,32 +1,39 @@
-<div id="search-modal" class="modal-is-open modal-is-opening" _="on closeModal remove .modal-is-opening then wait 10 then add .modal-is-closing then wait for animationend then remove me">
-<dialog _="on click if target is me then trigger closeModal" open>
-  <article>
-    <h3>
-      Search News
-      <span class="htmx-indicator">
-        <img src="/img/bars.svg"/> Searching...
-       </span>
-    </h3>
-    <input class="form-control" type="search"
-           name="search" placeholder="Begin typing to search in news"
-           hx-post="/search"
-           hx-trigger="input changed delay:500ms, keyup[key=='Enter'], load"
-           hx-target="#search-results"
-           hx-indicator=".htmx-indicator">
-    
-    <div class="overflow-auto">
-    <table class="table">
-        <tbody id="search-results">
-        </tbody>
-    </table>
-    </div>
+<div
+  id="search-modal"
+  class="modal-is-open modal-is-opening"
+  _="on closeModal remove .modal-is-opening then wait 10 then add .modal-is-closing then wait for animationend then remove me"
+>
+  <dialog _="on click if target is me then trigger closeModal" open>
+    <article>
+      <h3>
+        Search News
+        <span class="htmx-indicator">
+          <img src="/img/bars.svg" /> Searching...
+        </span>
+      </h3>
+      <input
+        class="form-control"
+        type="search"
+        name="search"
+        placeholder="Begin typing to search in news"
+        hx-post="/search"
+        hx-trigger="input changed delay:500ms, keyup[key=='Enter'], load"
+        hx-target="#search-results"
+        hx-indicator=".htmx-indicator"
+      />
 
-    <footer>
-      <button _="on click trigger closeModal" class="secondary">
-        Cancel
-      </button>
-      <button>Confirm</button>
-    </footer>
-  </article>
-</dialog>
+      <div class="overflow-auto">
+        <table class="table">
+          <tbody id="search-results"></tbody>
+        </table>
+      </div>
+
+      <footer>
+        <button _="on click trigger closeModal" class="secondary">
+          Cancel
+        </button>
+        <button>Confirm</button>
+      </footer>
+    </article>
+  </dialog>
 </div>

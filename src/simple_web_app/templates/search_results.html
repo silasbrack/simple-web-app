@@ -1,13 +1,10 @@
 {% for new in news %}
 <tr>
-<td>
-  <details>
-  <summary>
-  {{ new.title }}
-  </summary>
-  <p><small>{{ new.text }}</small></p>
-  </details>
-</td>
+  <td>
+    <details>
+      <summary>{{ new.title }}</summary>
+      <p><small>{{ new.text }}</small></p>
+    </details>
+  </td>
 </tr>
 {% endfor %}
-
