@@ -1,3 +1,4 @@
+import asyncio
 import contextlib
 import importlib.resources
 import logging
@@ -102,16 +103,21 @@ async def show_home_page(request: Request):
 
     all_categories = await queries_basic.get_categories(request.state.conn, limit=20)
 
-    if category_id:
-        rows = await queries_basic.get_news_by_category(request.state.conn, category_id=category_id, limit=limit, offset=offset, max_published_time=current_time)
-    else:
-        rows = await queries_basic.get_news(request.state.conn, limit=limit, offset=offset, max_published_time=current_time)
-    news = [dict(row) for row in rows]
-    for new in news:
-        categories = await queries_basic.get_categories_for_news(request.state.conn, news_item_id=new["id"])
-        new["categories"] = categories
-        published = datetime.datetime.strptime(new["published"], "%Y-%m-%dT%H:%M:%S.%f%z")
-        new["time_since_published"] = format_timedelta(datetime.datetime.now(tz=datetime.UTC) - published, "{days} days, {hours} hours ago")
+    rows = (
+        await queries_basic.get_news_by_category(request.state.conn, category_id=category_id, limit=limit, offset=offset, max_published_time=current_time)
+        if category_id
+        else
+        await queries_basic.get_news(request.state.conn, limit=limit, offset=offset, max_published_time=current_time)
+    )
+    categories = await asyncio.gather(*[queries_basic.get_categories_for_news(request.state.conn, news_item_id=row["id"]) for row in rows])
+
+    current_time_utc = datetime.datetime.now(tz=datetime.UTC)
+    def _get_time_since_published(published: str, current_time: datetime):
+        published = datetime.datetime.strptime(published, "%Y-%m-%dT%H:%M:%S.%f%z")
+        return format_timedelta(current_time - published, "{days} days, {hours} hours ago")
+    times_since_published = [_get_time_since_published(row["published"], current_time_utc) for row in rows]
+
+    news = [{**row, "categories": c, "time_since_published": tsp} for row, c, tsp in zip(rows, categories, times_since_published, strict=True)]
     elapsed = time.time() - t0
     logger.info({"event": "load_page", "page": "/home", "time_s": elapsed})
 
