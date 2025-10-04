@@ -91,7 +91,6 @@ def format_timedelta(tdelta, fmt):
 
 
 async def show_home_page(request: Request):
-    t0 = time.time()
     page = request.query_params.get("page", default=0)
     page = int(page) if page is not None else page
     current_time = request.query_params.get("current_time", default=datetime.datetime.now(tz=datetime.UTC))
@@ -118,10 +117,8 @@ async def show_home_page(request: Request):
     times_since_published = [_get_time_since_published(row["published"], current_time_utc) for row in rows]
 
     news = [{**row, "categories": c, "time_since_published": tsp} for row, c, tsp in zip(rows, categories, times_since_published, strict=True)]
-    elapsed = time.time() - t0
-    logger.info({"event": "load_page", "page": "/home", "time_s": elapsed})
-
     context = {"news": news, "categories": all_categories, "page": page, "current_time": current_time, "category_id": category_id}
+
     if is_htmx_request(request):
         context = context | {"oob": True}
     template_name = "oob_swap.html" if is_htmx_request(request) else "index.html"
@@ -140,10 +137,10 @@ async def search(request: Request):
 
 
 async def open_settings(request: Request):
-    tab = request.query_params.get("tab", default=None)
-    if tab:
-        return render(request, "settings_tab.html", context={"tab": tab})
-    return render(request, "settings.html", context={"tab": "general"})
+    tab = request.query_params.get("tab", default="general")
+    context = {"tab": tab}
+    template = "settings_tab.html" if is_htmx_request(request) else "settings.html"
+    return render(request, template, context=context)
 
 
 class CacheControlMiddleware(BaseHTTPMiddleware):
@@ -152,6 +149,7 @@ class CacheControlMiddleware(BaseHTTPMiddleware):
         if request.headers.get("HX-Preloaded") == "true":
             response.headers['cache-control'] = 'private, max-age=60'
         return response
+
 
 @contextlib.asynccontextmanager
 async def lifespan(app: Starlette):
