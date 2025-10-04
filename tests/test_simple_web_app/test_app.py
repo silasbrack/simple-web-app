@@ -122,7 +122,7 @@ async def test_select_chain(async_test_client, test_data):
         assert response.template.name == "oob_swap.html"
         assert len(response.context["news"]) > 0
         assert response.context["category_id"] == 1
-        assert all(any(c["id"] == 1 for c in n["categories"]) for n in response.context["news"])
+        assert all(any(c["id"] == 1 for c in n["categories"]) for n in response.context["news"])  # Every row contains the category we filtered by
         soup = BeautifulSoup(response.text, features="html.parser")
         load_more_button = soup.find("button", {"id": "load-more-btn"})
         assert "disabled" not in load_more_button.attrs
@@ -135,7 +135,7 @@ async def test_select_chain(async_test_client, test_data):
         assert response.template.name == "oob_swap.html"
         assert len(response.context["news"]) > 0
         assert response.context["category_id"] == 1
-        assert all(any(c["id"] == 1 for c in n["categories"]) for n in response.context["news"])
+        assert all(any(c["id"] == 1 for c in n["categories"]) for n in response.context["news"])  # Every row contains the category we filtered by
         soup = BeautifulSoup(response.text, features="html.parser")
         load_more_button = soup.find("button", {"id": "load-more-btn"})
         assert "disabled" in load_more_button.attrs
@@ -145,11 +145,13 @@ async def test_select_chain(async_test_client, test_data):
 
 async def test_settings(async_test_client, test_data):
     async with async_test_client as client:
+        # Open the home page
         response = await client.get("/")
         soup = BeautifulSoup(response.text, features="html.parser")
         modal_placeholder = soup.find("div", {"id": "modal-placeholder"})
         assert len(list(modal_placeholder.children)) == 0
 
+        # Open the settings modal
         settings_button = soup.find("a", {"id": "settings-btn"})
         path = settings_button["hx-get"]
         response = await client.get(path, headers={"HX-Request": "true"})
@@ -158,6 +160,7 @@ async def test_settings(async_test_client, test_data):
         assert soup.find("h4").text == "Appearance"
         # TODO: check that the modal_placeholder has an element
 
+        # Open the sync tab within the settings
         sync_tab = soup.find("div", {"id": "syncing-tab"})
         path = sync_tab["hx-get"]
         response = await client.get(path, headers={"HX-Request": "true"})
