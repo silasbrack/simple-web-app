@@ -94,7 +94,7 @@ async def show_home_page(request: Request):
     page = request.query_params.get("page", default=0)
     page = int(page) if page is not None else page
     current_time = request.query_params.get("current_time", default=datetime.datetime.now(tz=datetime.UTC))
-    category_id = request.query_params.get("category-id")
+    category_id = request.query_params.get("category_id")
     category_id = int(category_id) if category_id is not None else None
 
     limit = 5
@@ -175,11 +175,11 @@ async def lifespan(app: Starlette):
 
 
 routes = [
-    Route("/", methods=["GET"], endpoint=show_home_page),
-    Route("/search", methods=["GET"], endpoint=open_search),
-    Route("/search", methods=["POST"], endpoint=search),
-    Route("/settings", methods=["GET"], endpoint=open_settings),
-    Route("/settings/tab", methods=["GET"], endpoint=open_settings_tab),
+    Route("/", methods=["GET"], endpoint=show_home_page, name="news_page"),
+    Route("/search", methods=["GET"], endpoint=open_search, name="search_page"),
+    Route("/search", methods=["POST"], endpoint=search, name="search"),
+    Route("/settings", methods=["GET"], endpoint=open_settings, name="settings_page"),
+    Route("/settings/tab", methods=["GET"], endpoint=open_settings_tab, name="settings_tab"),
     Mount("/static", StaticFiles(directory=STATIC_DIR), name="static"),
 ]
 middleware = [
