@@ -103,11 +103,13 @@ async def show_home_page(request: Request):
     all_categories = await queries_basic.get_categories(request.state.conn, limit=20)
 
     rows = (
-        await queries_basic.get_news_by_category(request.state.conn, category_id=category_id, limit=limit, offset=offset, max_published_time=current_time)
+        await queries_basic.get_news_by_category(request.state.conn, category_id=category_id, limit=limit + 1, offset=offset, max_published_time=current_time)
         if category_id
         else
-        await queries_basic.get_news(request.state.conn, limit=limit, offset=offset, max_published_time=current_time)
+        await queries_basic.get_news(request.state.conn, limit=limit + 1, offset=offset, max_published_time=current_time)
     )
+    reached_end = len(rows) <= limit
+    rows = rows[:limit]
     categories = await asyncio.gather(*[queries_basic.get_categories_for_news(request.state.conn, news_item_id=row["id"]) for row in rows])
 
     current_time_utc = datetime.datetime.now(tz=datetime.UTC)
@@ -117,7 +119,7 @@ async def show_home_page(request: Request):
     times_since_published = [_get_time_since_published(row["published"], current_time_utc) for row in rows]
 
     news = [{**row, "categories": c, "time_since_published": tsp} for row, c, tsp in zip(rows, categories, times_since_published, strict=True)]
-    context = {"news": news, "categories": all_categories, "page": page, "current_time": current_time, "category_id": category_id}
+    context = {"news": news, "categories": all_categories, "page": page, "current_time": current_time, "category_id": category_id, "reached_end": reached_end}
 
     if is_htmx_request(request):
         context = context | {"oob": True}

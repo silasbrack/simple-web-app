@@ -118,6 +118,7 @@ async def test_select_chain(async_test_client, test_data):
         assert response.context["category_id"] == 1
         soup = BeautifulSoup(response.text, features="html.parser")
         load_more_button = soup.find("button", {"id": "load-more-btn"})
+        assert "disabled" not in load_more_button.attrs
         assert "page=1" in load_more_button.attrs["hx-get"]
         assert "category-id=1" in load_more_button.attrs["hx-get"]
 
@@ -127,6 +128,7 @@ async def test_select_chain(async_test_client, test_data):
         assert response.context["category_id"] == 1
         soup = BeautifulSoup(response.text, features="html.parser")
         load_more_button = soup.find("button", {"id": "load-more-btn"})
+        assert "disabled" in load_more_button.attrs
         assert "page=2" in load_more_button.attrs["hx-get"]
         assert "category-id=1" in load_more_button.attrs["hx-get"]
 
