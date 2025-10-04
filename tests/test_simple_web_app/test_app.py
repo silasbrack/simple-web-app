@@ -96,6 +96,7 @@ async def test_select_chain(async_test_client, test_data):
         for d in test_data:
             await insert_dummy_data(conn, d)
 
+        # Open the home page
         response = await client.get("/")
         assert response.status_code == 200
         assert response.template.name == "application.html"
@@ -105,6 +106,8 @@ async def test_select_chain(async_test_client, test_data):
         assert "page=1" in load_more_button.attrs["hx-get"]
         assert "category-id" not in load_more_button.attrs["hx-get"]
 
+        # Filter for category 2, which doesn't exist
+        # TODO: should this instead throw an error?
         response = await client.get("/?category-id=2", headers={"HX-Request": "true"})
         assert response.template.name == "oob_swap.html"
         assert len(response.context["news"]) == 0
@@ -114,21 +117,25 @@ async def test_select_chain(async_test_client, test_data):
         assert "page=1" in load_more_button.attrs["hx-get"]
         assert "category-id=2" in load_more_button.attrs["hx-get"]
 
+        # Filter for category 1, show only news with that category
         response = await client.get("/?category-id=1", headers={"HX-Request": "true"})
         assert response.template.name == "oob_swap.html"
         assert len(response.context["news"]) > 0
         assert response.context["category_id"] == 1
+        assert all(any(c["id"] == 1 for c in n["categories"]) for n in response.context["news"])
         soup = BeautifulSoup(response.text, features="html.parser")
         load_more_button = soup.find("button", {"id": "load-more-btn"})
         assert "disabled" not in load_more_button.attrs
         assert "page=1" in load_more_button.attrs["hx-get"]
         assert "category-id=1" in load_more_button.attrs["hx-get"]
 
+        # Load more news, should all still be category one; we only have 1 left so the load more button should be disabled
         path = load_more_button["hx-get"]
         response = await client.get(path, headers={"HX-Request": "true"})
         assert response.template.name == "oob_swap.html"
         assert len(response.context["news"]) > 0
         assert response.context["category_id"] == 1
+        assert all(any(c["id"] == 1 for c in n["categories"]) for n in response.context["news"])
         soup = BeautifulSoup(response.text, features="html.parser")
         load_more_button = soup.find("button", {"id": "load-more-btn"})
         assert "disabled" in load_more_button.attrs
