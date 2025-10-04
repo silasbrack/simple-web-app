@@ -140,9 +140,12 @@ async def search(request: Request):
 
 async def open_settings(request: Request):
     tab = request.query_params.get("tab", default="general")
-    context = {"tab": tab}
-    template = "settings_tab.html" if is_htmx_request(request) else "settings.html"
-    return render(request, template, context=context)
+    return render(request, "settings.html", context={"tab": tab})
+
+
+async def open_settings_tab(request: Request):
+    tab = request.query_params.get("tab", default="general")
+    return render(request, "settings_tab.html" , context={"tab": tab})
 
 
 class CacheControlMiddleware(BaseHTTPMiddleware):
@@ -176,6 +179,7 @@ routes = [
     Route("/search", methods=["GET"], endpoint=open_search),
     Route("/search", methods=["POST"], endpoint=search),
     Route("/settings", methods=["GET"], endpoint=open_settings),
+    Route("/settings/tab", methods=["GET"], endpoint=open_settings_tab),
     Mount("/static", StaticFiles(directory=STATIC_DIR), name="static"),
 ]
 middleware = [

@@ -1,16 +1,16 @@
-<div id="modal" class="modal-is-open modal-is-opening" _="on closeModal remove .modal-is-opening then wait 10 then add .modal-is-closing then wait for animationend then remove me">
+<div id="settings-modal" class="modal-is-open modal-is-opening" _="on closeModal remove .modal-is-opening then wait 10 then add .modal-is-closing then wait for animationend then remove me">
 <dialog _="on click if target is me then trigger closeModal" open>
   <article>
 
     <div class="overflow-auto" style="text-wrap: nowrap;">
       <nav>
         <ul>
-          <li><div hx-get="/settings?tab=general" hx-target="#settings-tab" hx-swap="innerHTML" preload style="cursor: pointer;">General</div></li>
-          <li><div hx-get="/settings?tab=categories" hx-target="#settings-tab" hx-swap="innerHTML" preload style="cursor: pointer;">Categories</div></li>
-          <li><div hx-get="/settings?tab=sections" hx-target="#settings-tab" hx-swap="innerHTML" preload style="cursor: pointer;">Sections</div></li>
-          <li><div hx-get="/settings?tab=content-filter" hx-target="#settings-tab" hx-swap="innerHTML" preload style="cursor: pointer;">Content Filter</div></li>
-          <li><div hx-get="/settings?tab=syncing" hx-target="#settings-tab" hx-swap="innerHTML" preload style="cursor: pointer;">Syncing</div></li>
-          <li><div hx-get="/settings?tab=experimental" hx-target="#settings-tab" hx-swap="innerHTML" preload style="cursor: pointer;">Experimental</div></li>
+          <li><div id="general-tab" hx-get="/settings/tab?tab=general" hx-target="#settings-tab" hx-swap="innerHTML" preload style="cursor: pointer;">General</div></li>
+          <li><div id="categories-tab" hx-get="/settings/tab?tab=categories" hx-target="#settings-tab" hx-swap="innerHTML" preload style="cursor: pointer;">Categories</div></li>
+          <li><div id="sections-tab" hx-get="/settings/tab?tab=sections" hx-target="#settings-tab" hx-swap="innerHTML" preload style="cursor: pointer;">Sections</div></li>
+          <li><div id="content-filter-tab" hx-get="/settings/tab?tab=content-filter" hx-target="#settings-tab" hx-swap="innerHTML" preload style="cursor: pointer;">Content Filter</div></li>
+          <li><div id="syncing-tab" hx-get="/settings/tab?tab=syncing" hx-target="#settings-tab" hx-swap="innerHTML" preload style="cursor: pointer;">Syncing</div></li>
+          <li><div id="experimental-tab" hx-get="/settings/tab?tab=experimental" hx-target="#settings-tab" hx-swap="innerHTML" preload style="cursor: pointer;">Experimental</div></li>
         </ul>
       </nav>
     </div>
