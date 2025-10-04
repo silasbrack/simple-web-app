@@ -106,6 +106,12 @@ async def test_select_chain(async_test_client, test_data):
         assert "page=1" in load_more_button.attrs["hx-get"]
         assert "category_id" not in load_more_button.attrs["hx-get"]
 
+        # Load more data
+        path = load_more_button["hx-get"]
+        response = await client.get(path, headers={"HX-Request": "true"})
+        assert response.status_code == 200
+        assert len(response.context["news"]) > 0
+
         # Filter for category 2, which doesn't exist
         # TODO: should this instead throw an error?
         response = await client.get("/?category_id=2", headers={"HX-Request": "true"})
