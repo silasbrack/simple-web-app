@@ -83,7 +83,7 @@ async def test_home_htmx(async_test_client, test_data):
         conn = client.app_state["conn"]
         for d in test_data:
             await insert_dummy_data(conn, d)
-        response = await client.get("/", headers={"HX-Request": "asdf"})
+        response = await client.get("/", headers={"HX-Request": "true"})
 
     assert response.status_code == 200
     assert response.template.name == "oob_swap.html"
@@ -105,7 +105,8 @@ async def test_select_chain(async_test_client, test_data):
         assert "page=1" in load_more_button.attrs["hx-get"]
         assert "category-id" not in load_more_button.attrs["hx-get"]
 
-        response = await client.get("/?category-id=2")
+        response = await client.get("/?category-id=2", headers={"HX-Request": "true"})
+        assert response.template.name == "oob_swap.html"
         assert len(response.context["news"]) == 0
         assert response.context["category_id"] == 2
         soup = BeautifulSoup(response.text, features="html.parser")
@@ -113,7 +114,8 @@ async def test_select_chain(async_test_client, test_data):
         assert "page=1" in load_more_button.attrs["hx-get"]
         assert "category-id=2" in load_more_button.attrs["hx-get"]
 
-        response = await client.get("/?category-id=1")
+        response = await client.get("/?category-id=1", headers={"HX-Request": "true"})
+        assert response.template.name == "oob_swap.html"
         assert len(response.context["news"]) > 0
         assert response.context["category_id"] == 1
         soup = BeautifulSoup(response.text, features="html.parser")
@@ -123,7 +125,8 @@ async def test_select_chain(async_test_client, test_data):
         assert "category-id=1" in load_more_button.attrs["hx-get"]
 
         path = load_more_button["hx-get"]
-        response = await client.get(path)
+        response = await client.get(path, headers={"HX-Request": "true"})
+        assert response.template.name == "oob_swap.html"
         assert len(response.context["news"]) > 0
         assert response.context["category_id"] == 1
         soup = BeautifulSoup(response.text, features="html.parser")
@@ -131,6 +134,29 @@ async def test_select_chain(async_test_client, test_data):
         assert "disabled" in load_more_button.attrs
         assert "page=2" in load_more_button.attrs["hx-get"]
         assert "category-id=1" in load_more_button.attrs["hx-get"]
+
+
+async def test_settings(async_test_client, test_data):
+    async with async_test_client as client:
+        response = await client.get("/")
+        soup = BeautifulSoup(response.text, features="html.parser")
+        modal_placeholder = soup.find("div", {"id": "modal-placeholder"})
+        assert len(list(modal_placeholder.children)) == 0
+
+        settings_button = soup.find("a", {"id": "settings-btn"})
+        path = settings_button["hx-get"]
+        response = await client.get(path, headers={"HX-Request": "true"})
+        assert response.template.name == "settings.html"
+        soup = BeautifulSoup(response.text, features="html.parser")
+        assert soup.find("h4").text == "Appearance"
+        # TODO: check that the modal_placeholder has an element
+
+        sync_tab = soup.find("div", {"id": "syncing-tab"})
+        path = sync_tab["hx-get"]
+        response = await client.get(path, headers={"HX-Request": "true"})
+        assert response.template.name == "settings_tab.html"
+        soup = BeautifulSoup(response.text, features="html.parser")
+        assert soup.find("h4").text == "Sync Preferences"
 
 
 async def test_preload():
